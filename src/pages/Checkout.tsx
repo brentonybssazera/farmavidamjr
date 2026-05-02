@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { Link, Navigate } from "react-router-dom";
 import { ArrowLeft, Check, Loader2, Copy, QrCode, Truck } from "lucide-react";
 import { Topbar } from "@/components/store/Topbar";
@@ -53,6 +53,19 @@ const isValidBrazilianDocument = (value: string) => {
   return (digits.length === 11 && isValidCPF(digits)) || (digits.length === 14 && isValidCNPJ(digits));
 };
 
+const normalizePixPayload = (payload: any) => {
+  const qrCode = payload?.qrCode ?? payload?.pix?.code ?? payload?.pixCode ?? payload?.copyPaste;
+  const qrCodeImage = payload?.qrCodeImage ?? payload?.pix?.base64 ?? payload?.pix?.image ?? payload?.qrCodeBase64;
+
+  if (!qrCode && !qrCodeImage) return null;
+
+  return {
+    id: payload?.id ?? payload?.transactionId,
+    qrCode,
+    qrCodeImage,
+  };
+};
+
 const Checkout = () => {
   const { items, total, clear } = useCart();
   const [cartOpen, setCartOpen] = useState(false);
@@ -67,8 +80,9 @@ const Checkout = () => {
   const [shipState, setShipState] = useState("");
   const [shipComplement, setShipComplement] = useState("");
   const [pix, setPix] = useState<{ qrCode?: string; qrCodeImage?: string; id?: string } | null>(null);
+  const pixRequestedRef = useRef(false);
 
-  if (items.length === 0 && !pix) return <Navigate to="/" replace />;
+  if (items.length === 0 && !pix && !pixRequestedRef.current) return <Navigate to="/" replace />;
 
   const handlePlace = async () => {
     const cleanDocument = onlyDigits(document);
@@ -104,8 +118,11 @@ const Checkout = () => {
       });
       if (error) throw error;
       if ((data as any)?.error) throw new Error((data as any).error);
-      if (!data?.qrCode) throw new Error("PIX não retornado pelo gateway");
-      setPix(data);
+      const normalizedPix = normalizePixPayload(data);
+      if (!normalizedPix) throw new Error("PIX não retornado pelo gateway");
+
+      pixRequestedRef.current = true;
+      setPix(normalizedPix);
       clear();
       toast.success("PIX gerado! Escaneie ou copie o código");
     } catch (err: any) {
