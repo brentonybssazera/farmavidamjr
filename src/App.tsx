@@ -4,12 +4,12 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { AuthProvider } from "@/hooks/useAuth";
-import Index from "./pages/Index.tsx";
-import NotFound from "./pages/NotFound.tsx";
-import ProductPage from "./pages/ProductPage.tsx";
-import Auth from "./pages/Auth.tsx";
-import Account from "./pages/Account.tsx";
-import Checkout from "./pages/Checkout.tsx";
+import Index from "./pages/Index";
+import NotFound from "./pages/NotFound";
+import ProductPage from "./pages/ProductPage";
+import Auth from "./pages/Auth";
+import Account from "./pages/Account";
+import Checkout from "./pages/Checkout";
 
 const queryClient = new QueryClient();
 
