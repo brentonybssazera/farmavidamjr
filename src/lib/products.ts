@@ -1,7 +1,5 @@
-import penImg from "@/assets/monjaro-pen.jpg";
-import boxImg from "@/assets/monjaro-box.jpg";
-import duoImg from "@/assets/monjaro-duo.jpg";
-import kitImg from "@/assets/monjaro-kit.jpg";
+import penImg from "@/assets/product-pen.jpg";
+import boxImg from "@/assets/product-box.jpg";
 
 export type Product = {
   id: string;
@@ -24,7 +22,7 @@ export const PRODUCTS: Product[] = [
     description: "Caneta KwikPen com 4 doses injetáveis semanais. Ideal para iniciar o tratamento.",
     longDescription:
       "Mounjaro 2,5 mg Tirzepatida com 4 doses injetáveis. Medicamento injetável utilizado no tratamento do diabetes tipo 2 e auxiliar no controle do peso. Princípio ativo: tirzepatida. Fabricante: Eli Lilly. VENDA LIMITADA A DUAS UNIDADES POR CLIENTE.",
-    price: 1728.64,
+    price: 210.99,
     oldPrice: 1754.96,
     image: penImg,
     badge: "Mais procurado",
@@ -37,7 +35,7 @@ export const PRODUCTS: Product[] = [
     description: "Dose terapêutica padrão após adaptação. Caneta com 4 doses injetáveis.",
     longDescription:
       "Mounjaro 5 mg Tirzepatida com 4 Doses Injetáveis. Primeira dose de manutenção, indicada após 4 semanas de uso da dose inicial de 2,5 mg. Caneta KwikPen original Eli Lilly. Tratamento adjuvante para diabetes tipo 2.",
-    price: 2161.00,
+    price: 210.99,
     oldPrice: 2193.91,
     image: boxImg,
     inStock: true,
@@ -49,9 +47,9 @@ export const PRODUCTS: Product[] = [
     description: "Dose intermediária — 4 doses injetáveis. Conforme prescrição médica.",
     longDescription:
       "Mounjaro 7,5 mg Tirzepatida com 4 Doses Injetáveis. Dose intermediária utilizada na evolução gradual do tratamento, conforme orientação médica. Caneta KwikPen Eli Lilly.",
-    price: 2550.69,
+    price: 210.99,
     oldPrice: 2576.36,
-    image: duoImg,
+    image: penImg,
     inStock: true,
   },
   {
@@ -61,9 +59,9 @@ export const PRODUCTS: Product[] = [
     description: "Dose alta — 4 doses injetáveis. Sempre com acompanhamento médico.",
     longDescription:
       "Mounjaro 10 mg Tirzepatida com 4 Doses Injetáveis. Dose alta indicada na evolução do tratamento, conforme prescrição médica. Caneta KwikPen original Eli Lilly.",
-    price: 2960.59,
+    price: 210.99,
     oldPrice: 2990.43,
-    image: kitImg,
+    image: boxImg,
     badge: "Premium",
     inStock: true,
   },
@@ -74,7 +72,7 @@ export const PRODUCTS: Product[] = [
     description: "Caneta de alta concentração — 4 doses para tratamentos avançados.",
     longDescription:
       "Mounjaro 12,5 mg Tirzepatida com 4 Doses Injetáveis. Para tratamentos em estágio avançado, sempre conforme prescrição médica. Caneta KwikPen Eli Lilly.",
-    price: 3454.35,
+    price: 210.99,
     oldPrice: 3506.95,
     image: penImg,
     inStock: true,
@@ -86,7 +84,7 @@ export const PRODUCTS: Product[] = [
     description: "Maior concentração disponível — 4 doses. Indicada apenas com prescrição.",
     longDescription:
       "Mounjaro 15 mg Tirzepatida com 4 Doses Injetáveis. Maior concentração disponível, indicada exclusivamente com prescrição médica para casos específicos. Caneta KwikPen Eli Lilly.",
-    price: 3890.00,
+    price: 210.99,
     oldPrice: 3950.00,
     image: boxImg,
     badge: "Maior dose",
