@@ -21,6 +21,11 @@ const Checkout = () => {
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [document, setDocument] = useState("");
+  const [shipName, setShipName] = useState("");
+  const [shipAddress, setShipAddress] = useState("");
+  const [shipCity, setShipCity] = useState("");
+  const [shipState, setShipState] = useState("");
+  const [shipComplement, setShipComplement] = useState("");
   const [pix, setPix] = useState<{ qrCode?: string; qrCodeImage?: string; id?: string } | null>(null);
 
   if (items.length === 0 && !pix) return <Navigate to="/" replace />;
@@ -30,6 +35,10 @@ const Checkout = () => {
       toast.error("Preencha nome, e-mail e CPF");
       return;
     }
+    if (!shipAddress || !shipCity || !shipState) {
+      toast.error("Preencha o endereço de entrega");
+      return;
+    }
     setPlacing(true);
     try {
       const { data, error } = await supabase.functions.invoke("create-pix-payment", {
@@ -37,9 +46,17 @@ const Checkout = () => {
           amount: total(),
           customer: { name, email, document, phone },
           items: items.map((i) => ({ title: i.product.name, quantity: i.quantity, unitPrice: i.product.price })),
+          shipping: {
+            name: shipName || name,
+            address: shipAddress,
+            city: shipCity,
+            state: shipState,
+            complement: shipComplement,
+          },
         },
       });
       if (error) throw error;
+      if ((data as any)?.error) throw new Error((data as any).error);
       if (!data?.qrCode) throw new Error("PIX não retornado pelo gateway");
       setPix(data);
       clear();
@@ -145,6 +162,35 @@ const Checkout = () => {
                   <Label htmlFor="doc" className="text-xs">CPF</Label>
                   <Input id="doc" value={document} onChange={(e) => setDocument(e.target.value)} className="rounded-lg h-11 mt-1" />
                 </div>
+              </div>
+            </div>
+
+            <div className="bg-card rounded-2xl border border-border shadow-card p-6 mb-5 space-y-4">
+              <h2 className="font-semibold text-base text-foreground">Endereço de entrega</h2>
+              <div className="space-y-3">
+                <div>
+                  <Label htmlFor="shipName" className="text-xs">Destinatário (opcional)</Label>
+                  <Input id="shipName" value={shipName} onChange={(e) => setShipName(e.target.value)} placeholder="Mesmo nome do comprador" className="rounded-lg h-11 mt-1" />
+                </div>
+                <div>
+                  <Label htmlFor="addr" className="text-xs">Endereço completo (rua, número, bairro)</Label>
+                  <Input id="addr" value={shipAddress} onChange={(e) => setShipAddress(e.target.value)} className="rounded-lg h-11 mt-1" />
+                </div>
+                <div className="grid grid-cols-3 gap-3">
+                  <div className="col-span-2">
+                    <Label htmlFor="city" className="text-xs">Cidade</Label>
+                    <Input id="city" value={shipCity} onChange={(e) => setShipCity(e.target.value)} className="rounded-lg h-11 mt-1" />
+                  </div>
+                  <div>
+                    <Label htmlFor="state" className="text-xs">UF</Label>
+                    <Input id="state" maxLength={2} value={shipState} onChange={(e) => setShipState(e.target.value.toUpperCase())} className="rounded-lg h-11 mt-1" />
+                  </div>
+                </div>
+                <div>
+                  <Label htmlFor="comp" className="text-xs">Complemento / referência (opcional)</Label>
+                  <Input id="comp" value={shipComplement} onChange={(e) => setShipComplement(e.target.value)} className="rounded-lg h-11 mt-1" />
+                </div>
+                <p className="text-xs text-muted-foreground">📦 Frete grátis · entrega refrigerada para todo o Brasil</p>
               </div>
             </div>
 
