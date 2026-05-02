@@ -4,53 +4,60 @@
 
 @layer base {
   :root {
-    /* Vital Pharma — Clean medical/wellness palette */
-    --background: 180 30% 98%;
-    --foreground: 195 45% 12%;
+    /* FarmaVida — vibrant pharmacy palette: purple, green, pink, white, black, gray, blue */
+    --background: 0 0% 100%;
+    --foreground: 240 15% 12%;
 
     --card: 0 0% 100%;
-    --card-foreground: 195 45% 12%;
+    --card-foreground: 240 15% 12%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 195 45% 12%;
+    --popover-foreground: 240 15% 12%;
 
-    /* Deep teal */
-    --primary: 184 75% 22%;
-    --primary-foreground: 180 30% 98%;
-    --primary-glow: 184 60% 38%;
+    /* Brand purple — confiança farmacêutica */
+    --primary: 264 75% 48%;
+    --primary-foreground: 0 0% 100%;
+    --primary-soft: 264 100% 97%;
 
-    /* Soft mint */
-    --secondary: 168 55% 92%;
-    --secondary-foreground: 184 75% 18%;
-
-    --muted: 180 25% 94%;
-    --muted-foreground: 195 15% 42%;
-
-    /* Warm coral accent */
-    --accent: 14 90% 62%;
+    /* Pink accent — calor humano */
+    --accent: 335 85% 60%;
     --accent-foreground: 0 0% 100%;
+    --accent-soft: 335 100% 97%;
+
+    /* Green success — saúde */
+    --success: 152 70% 40%;
+    --success-foreground: 0 0% 100%;
+    --success-soft: 152 70% 95%;
+
+    /* Blue info */
+    --info: 215 90% 55%;
+    --info-foreground: 0 0% 100%;
+    --info-soft: 215 100% 96%;
+
+    --secondary: 240 15% 96%;
+    --secondary-foreground: 240 15% 12%;
+
+    --muted: 240 10% 95%;
+    --muted-foreground: 240 8% 42%;
 
     --destructive: 0 75% 52%;
     --destructive-foreground: 0 0% 100%;
 
-    --success: 152 65% 38%;
-    --success-foreground: 0 0% 100%;
+    --border: 240 12% 90%;
+    --input: 240 12% 90%;
+    --ring: 264 75% 48%;
 
-    --border: 180 20% 88%;
-    --input: 180 20% 90%;
-    --ring: 184 75% 30%;
+    --radius: 1rem;
 
-    --radius: 0.875rem;
+    --gradient-brand: linear-gradient(135deg, hsl(264 75% 48%) 0%, hsl(285 75% 55%) 50%, hsl(335 85% 60%) 100%);
+    --gradient-promo: linear-gradient(135deg, hsl(152 70% 40%) 0%, hsl(170 75% 42%) 100%);
+    --gradient-soft: linear-gradient(180deg, hsl(264 100% 99%) 0%, hsl(335 100% 99%) 100%);
+    --gradient-blue: linear-gradient(135deg, hsl(215 90% 55%) 0%, hsl(264 75% 55%) 100%);
 
-    --gradient-hero: linear-gradient(135deg, hsl(184 75% 22%) 0%, hsl(190 65% 30%) 60%, hsl(168 55% 45%) 100%);
-    --gradient-soft: linear-gradient(180deg, hsl(180 30% 98%) 0%, hsl(168 55% 95%) 100%);
-    --gradient-card: linear-gradient(180deg, hsl(0 0% 100%) 0%, hsl(180 25% 97%) 100%);
-
-    --shadow-soft: 0 4px 20px -8px hsl(184 75% 22% / 0.12);
-    --shadow-glow: 0 20px 60px -20px hsl(184 75% 22% / 0.35);
-    --shadow-card: 0 2px 12px -4px hsl(195 45% 12% / 0.08);
-
-    --transition-smooth: cubic-bezier(0.22, 1, 0.36, 1);
+    --shadow-brand: 0 12px 32px -12px hsl(264 75% 48% / 0.35);
+    --shadow-pink: 0 12px 32px -12px hsl(335 85% 60% / 0.35);
+    --shadow-card: 0 4px 16px -4px hsl(240 15% 12% / 0.08);
+    --shadow-card-hover: 0 16px 40px -12px hsl(264 75% 48% / 0.25);
 
     --sidebar-background: 0 0% 98%;
     --sidebar-foreground: 240 5.3% 26.1%;
@@ -64,28 +71,28 @@
 }
 
 @layer base {
-  * {
-    @apply border-border;
-  }
-
+  * { @apply border-border; }
+  html { -webkit-text-size-adjust: 100%; }
   body {
     @apply bg-background text-foreground antialiased;
-    font-family: 'Inter', system-ui, sans-serif;
-    font-feature-settings: "ss01", "cv11";
+    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    font-size: 17px;
+    line-height: 1.6;
   }
-
-  h1, h2, h3, h4 {
-    font-family: 'Fraunces', Georgia, serif;
-    letter-spacing: -0.02em;
-  }
+  h1, h2, h3 { font-family: 'DM Serif Display', Georgia, serif; letter-spacing: -0.01em; }
+  /* Larger interactive targets for accessibility */
+  button, a, input, select { min-height: 44px; }
 }
 
 @layer utilities {
-  .font-display { font-family: 'Fraunces', Georgia, serif; }
-  .bg-gradient-hero { background: var(--gradient-hero); }
+  .font-serif-display { font-family: 'DM Serif Display', Georgia, serif; }
+  .bg-gradient-brand { background: var(--gradient-brand); }
+  .bg-gradient-promo { background: var(--gradient-promo); }
   .bg-gradient-soft { background: var(--gradient-soft); }
-  .bg-gradient-card { background: var(--gradient-card); }
-  .shadow-soft { box-shadow: var(--shadow-soft); }
-  .shadow-glow { box-shadow: var(--shadow-glow); }
+  .bg-gradient-blue { background: var(--gradient-blue); }
+  .shadow-brand { box-shadow: var(--shadow-brand); }
+  .shadow-pink { box-shadow: var(--shadow-pink); }
   .shadow-card { box-shadow: var(--shadow-card); }
+  .shadow-card-hover { box-shadow: var(--shadow-card-hover); }
+  .text-balance { text-wrap: balance; }
 }
