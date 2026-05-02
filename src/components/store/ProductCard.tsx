@@ -34,7 +34,7 @@ export const ProductCard = ({ product }: { product: Product }) => {
       )}
 
       <Link to={`/produto/${product.id}`} className="block">
-        <div className="aspect-square bg-gradient-soft p-8 flex items-center justify-center overflow-hidden">
+        <div className="aspect-square bg-gradient-soft p-5 sm:p-8 flex items-center justify-center overflow-hidden">
           <img
             src={product.image}
             alt={product.name}
@@ -46,33 +46,33 @@ export const ProductCard = ({ product }: { product: Product }) => {
         </div>
       </Link>
 
-      <div className="p-5 space-y-3">
+      <div className="p-3.5 sm:p-5 space-y-2.5 sm:space-y-3">
         <div>
           <p className="text-[11px] font-semibold uppercase tracking-wider text-primary">{product.dose}</p>
           <Link to={`/produto/${product.id}`}>
-            <h3 className="font-serif-display text-xl text-foreground leading-snug mt-1 hover:text-primary transition-colors">
+            <h3 className="font-serif-display text-base sm:text-xl text-foreground leading-snug mt-1 hover:text-primary transition-colors line-clamp-2">
               {product.name}
             </h3>
           </Link>
         </div>
 
-        <div className="flex items-center gap-1.5 text-xs">
+        <div className="flex items-center gap-1.5 text-[11px] sm:text-xs">
           <Check className="h-3.5 w-3.5 text-success" strokeWidth={3} />
-          <span className="text-muted-foreground">Em estoque · Frete grátis</span>
+          <span className="text-muted-foreground">Frete grátis</span>
         </div>
 
-        <div className="pt-3 border-t border-border">
+        <div className="pt-2.5 sm:pt-3 border-t border-border">
           {product.oldPrice && (
             <p className="text-xs text-muted-foreground line-through">{formatBRL(product.oldPrice)}</p>
           )}
-          <p className="font-serif-display text-3xl text-foreground leading-none">{formatBRL(product.price)}</p>
-          <p className="text-xs text-success font-medium mt-1">ou 12x de {formatBRL(product.price / 12)}</p>
+          <p className="font-serif-display text-2xl sm:text-3xl text-foreground leading-none">{formatBRL(product.price)}</p>
+          <p className="text-[11px] sm:text-xs text-success font-medium mt-1">12x de {formatBRL(product.price / 12)}</p>
 
           <Button
             onClick={handleAdd}
-            className="w-full mt-4 rounded-full h-12 text-sm font-semibold bg-primary hover:bg-primary/90 text-primary-foreground"
+            className="w-full mt-3 sm:mt-4 rounded-full h-10 sm:h-12 text-xs sm:text-sm font-semibold bg-primary hover:bg-primary/90 text-primary-foreground"
           >
-            <Plus className="h-4 w-4 mr-1.5" strokeWidth={3} /> Adicionar
+            <Plus className="h-4 w-4 mr-1" strokeWidth={3} /> Adicionar
           </Button>
         </div>
       </div>
