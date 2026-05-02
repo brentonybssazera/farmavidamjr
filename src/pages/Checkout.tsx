@@ -13,6 +13,46 @@ import { formatBRL } from "@/lib/products";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
+const onlyDigits = (value: string) => value.replace(/\D/g, "");
+
+const isRepeatedDigits = (value: string) => /^(\d)\1+$/.test(value);
+
+const isValidCPF = (value: string) => {
+  const digits = onlyDigits(value);
+  if (digits.length !== 11 || isRepeatedDigits(digits)) return false;
+
+  let sum = 0;
+  for (let i = 0; i < 9; i += 1) sum += Number(digits[i]) * (10 - i);
+  const firstCheck = (sum * 10) % 11 % 10;
+  if (firstCheck !== Number(digits[9])) return false;
+
+  sum = 0;
+  for (let i = 0; i < 10; i += 1) sum += Number(digits[i]) * (11 - i);
+  const secondCheck = (sum * 10) % 11 % 10;
+  return secondCheck === Number(digits[10]);
+};
+
+const isValidCNPJ = (value: string) => {
+  const digits = onlyDigits(value);
+  if (digits.length !== 14 || isRepeatedDigits(digits)) return false;
+
+  const calculateCheckDigit = (base: string) => {
+    const weights = base.length === 12 ? [5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2] : [6, 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2];
+    const total = base.split("").reduce((sum, digit, index) => sum + Number(digit) * weights[index], 0);
+    const remainder = total % 11;
+    return remainder < 2 ? 0 : 11 - remainder;
+  };
+
+  const firstCheck = calculateCheckDigit(digits.slice(0, 12));
+  const secondCheck = calculateCheckDigit(digits.slice(0, 12) + firstCheck);
+  return firstCheck === Number(digits[12]) && secondCheck === Number(digits[13]);
+};
+
+const isValidBrazilianDocument = (value: string) => {
+  const digits = onlyDigits(value);
+  return (digits.length === 11 && isValidCPF(digits)) || (digits.length === 14 && isValidCNPJ(digits));
+};
+
 const Checkout = () => {
   const { items, total, clear } = useCart();
   const [cartOpen, setCartOpen] = useState(false);
@@ -31,8 +71,15 @@ const Checkout = () => {
   if (items.length === 0 && !pix) return <Navigate to="/" replace />;
 
   const handlePlace = async () => {
+    const cleanDocument = onlyDigits(document);
+    const cleanPhone = onlyDigits(phone);
+
     if (!name || !email || !document) {
-      toast.error("Preencha nome, e-mail e CPF");
+      toast.error("Preencha nome, e-mail e CPF/CNPJ");
+      return;
+    }
+    if (!isValidBrazilianDocument(cleanDocument)) {
+      toast.error("Digite um CPF ou CNPJ válido");
       return;
     }
     if (!shipAddress || !shipCity || !shipState) {
@@ -44,14 +91,14 @@ const Checkout = () => {
       const { data, error } = await supabase.functions.invoke("create-pix-payment", {
         body: {
           amount: total(),
-          customer: { name, email, document, phone },
+          customer: { name: name.trim(), email: email.trim(), document: cleanDocument, phone: cleanPhone },
           items: items.map((i) => ({ title: i.product.name, quantity: i.quantity, unitPrice: i.product.price })),
           shipping: {
-            name: shipName || name,
-            address: shipAddress,
-            city: shipCity,
-            state: shipState,
-            complement: shipComplement,
+            name: (shipName || name).trim(),
+            address: shipAddress.trim(),
+            city: shipCity.trim(),
+            state: shipState.trim(),
+            complement: shipComplement.trim(),
           },
         },
       });
@@ -159,8 +206,8 @@ const Checkout = () => {
                   </div>
                 </div>
                 <div>
-                  <Label htmlFor="doc" className="text-xs">CPF</Label>
-                  <Input id="doc" value={document} onChange={(e) => setDocument(e.target.value)} className="rounded-lg h-11 mt-1" />
+                  <Label htmlFor="doc" className="text-xs">CPF ou CNPJ</Label>
+                  <Input id="doc" value={document} onChange={(e) => setDocument(e.target.value)} placeholder="Somente números" className="rounded-lg h-11 mt-1" />
                 </div>
               </div>
             </div>
