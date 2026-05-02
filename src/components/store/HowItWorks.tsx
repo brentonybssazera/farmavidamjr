@@ -8,24 +8,24 @@ const steps = [
 ];
 
 export const HowItWorks = () => (
-  <section className="bg-gradient-soft py-16">
+  <section id="como-funciona" className="bg-secondary/40 py-16 mt-8">
     <div className="container">
       <div className="text-center mb-12">
-        <p className="inline-block px-4 py-1.5 rounded-full bg-accent-soft text-accent text-sm font-bold uppercase tracking-wide mb-3">
-          Simples e seguro
-        </p>
-        <h2 className="font-serif-display text-4xl md:text-5xl text-foreground">Como comprar em 4 passos</h2>
+        <p className="text-xs font-semibold uppercase tracking-widest text-primary mb-2">Como funciona</p>
+        <h2 className="font-serif-display text-3xl md:text-4xl text-foreground">Compre em 4 passos simples</h2>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
         {steps.map(({ Icon, t, d }, i) => (
-          <div key={t} className="bg-card rounded-3xl p-6 border-2 border-border shadow-card relative">
-            <div className="absolute -top-4 -left-2 h-12 w-12 rounded-2xl bg-gradient-brand text-primary-foreground font-serif-display text-2xl flex items-center justify-center shadow-brand">
-              {i + 1}
+          <div key={t} className="bg-card rounded-2xl p-6 border border-border">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="h-9 w-9 rounded-full bg-primary text-primary-foreground font-bold text-sm flex items-center justify-center">
+                {i + 1}
+              </div>
+              <Icon className="h-5 w-5 text-primary" strokeWidth={2} />
             </div>
-            <Icon className="h-10 w-10 text-primary mt-4 mb-3" strokeWidth={2} />
-            <h3 className="font-bold text-xl text-foreground mb-1">{t}</h3>
-            <p className="text-muted-foreground">{d}</p>
+            <h3 className="font-semibold text-base text-foreground mb-1">{t}</h3>
+            <p className="text-sm text-muted-foreground leading-snug">{d}</p>
           </div>
         ))}
       </div>
