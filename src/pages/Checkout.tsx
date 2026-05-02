@@ -80,6 +80,7 @@ const Checkout = () => {
   const [shipState, setShipState] = useState("");
   const [shipComplement, setShipComplement] = useState("");
   const [pix, setPix] = useState<{ qrCode?: string; qrCodeImage?: string; id?: string } | null>(null);
+  const [pixAmount, setPixAmount] = useState<number>(0);
   const pixRequestedRef = useRef(false);
 
   if (items.length === 0 && !pix && !pixRequestedRef.current) return <Navigate to="/" replace />;
@@ -122,6 +123,7 @@ const Checkout = () => {
       if (!normalizedPix) throw new Error("PIX não retornado pelo gateway");
 
       pixRequestedRef.current = true;
+      setPixAmount(total());
       setPix(normalizedPix);
       clear();
       toast.success("PIX gerado! Escaneie ou copie o código");
@@ -145,29 +147,35 @@ const Checkout = () => {
       <CartSheet open={cartOpen} onOpenChange={setCartOpen} />
 
       <main className="flex-1 container py-8 max-w-2xl">
-        <Link to="/" className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-primary mb-6 font-medium">
+        <Link to="/" className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-primary mb-4 font-medium">
           <ArrowLeft className="h-4 w-4" /> Continuar comprando
         </Link>
 
         {pix ? (
-          <div className="bg-card rounded-2xl border border-border shadow-card p-8 text-center space-y-5">
+          <div className="bg-card rounded-2xl border border-border shadow-card p-5 sm:p-8 text-center space-y-5">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-success-soft text-success text-xs font-semibold">
               <QrCode className="h-3.5 w-3.5" /> PIX gerado
             </div>
-            <h1 className="font-serif-display text-3xl text-foreground">Pague com PIX</h1>
+            <h1 className="font-serif-display text-2xl sm:text-3xl text-foreground">Pague com PIX</h1>
+
+            <div className="bg-primary-soft/60 rounded-xl py-4 px-5 inline-flex flex-col items-center mx-auto">
+              <span className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">Valor a pagar</span>
+              <span className="font-serif-display text-3xl sm:text-4xl text-primary leading-tight mt-1">{formatBRL(pixAmount)}</span>
+            </div>
+
             <p className="text-muted-foreground text-sm">Escaneie o QR Code ou copie o código abaixo. O pagamento é confirmado em segundos.</p>
 
             {pix.qrCodeImage && (
               <div className="flex justify-center">
                 <img src={pix.qrCodeImage.startsWith("data:") ? pix.qrCodeImage : `data:image/png;base64,${pix.qrCodeImage}`}
-                  alt="QR Code PIX" className="h-64 w-64 border border-border rounded-xl" />
+                  alt="QR Code PIX" className="h-56 w-56 sm:h-64 sm:w-64 border border-border rounded-xl bg-white p-2" />
               </div>
             )}
 
             {pix.qrCode && (
-              <div className="bg-secondary/60 rounded-xl p-4 text-left">
+              <div className="bg-secondary/60 rounded-xl p-3 sm:p-4 text-left">
                 <p className="text-xs font-semibold text-muted-foreground mb-2">PIX copia e cola</p>
-                <p className="text-xs font-mono break-all text-foreground">{pix.qrCode}</p>
+                <p className="text-[11px] sm:text-xs font-mono break-all text-foreground max-h-24 overflow-y-auto">{pix.qrCode}</p>
                 <Button onClick={() => copy(pix.qrCode!)} className="w-full mt-3 rounded-full h-11" variant="outline">
                   <Copy className="h-4 w-4 mr-2" /> Copiar código PIX
                 </Button>
@@ -178,7 +186,7 @@ const Checkout = () => {
           </div>
         ) : (
           <>
-            <h1 className="font-serif-display text-3xl md:text-4xl text-foreground mb-6">Finalizar pedido</h1>
+            <h1 className="font-serif-display text-2xl sm:text-3xl md:text-4xl text-foreground mb-5">Finalizar pedido</h1>
 
             <div className="bg-card rounded-2xl border border-border shadow-card p-6 mb-5">
               <h2 className="font-semibold text-base mb-4 text-foreground">Resumo</h2>
