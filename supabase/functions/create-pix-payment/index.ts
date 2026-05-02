@@ -12,6 +12,41 @@ interface PixRequest {
   shipping?: { name: string; address: string; city: string; state: string; complement?: string };
 }
 
+const onlyDigits = (value: string) => value.replace(/\D/g, "");
+
+const isRepeatedDigits = (value: string) => /^(\d)\1+$/.test(value);
+
+const isValidCPF = (value: string) => {
+  if (value.length !== 11 || isRepeatedDigits(value)) return false;
+  let sum = 0;
+  for (let i = 0; i < 9; i += 1) sum += Number(value[i]) * (10 - i);
+  const firstCheck = (sum * 10) % 11 % 10;
+  if (firstCheck !== Number(value[9])) return false;
+
+  sum = 0;
+  for (let i = 0; i < 10; i += 1) sum += Number(value[i]) * (11 - i);
+  const secondCheck = (sum * 10) % 11 % 10;
+  return secondCheck === Number(value[10]);
+};
+
+const isValidCNPJ = (value: string) => {
+  if (value.length !== 14 || isRepeatedDigits(value)) return false;
+
+  const calculateCheckDigit = (base: string) => {
+    const weights = base.length === 12 ? [5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2] : [6, 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2];
+    const total = base.split("").reduce((sum, digit, index) => sum + Number(digit) * weights[index], 0);
+    const remainder = total % 11;
+    return remainder < 2 ? 0 : 11 - remainder;
+  };
+
+  const firstCheck = calculateCheckDigit(value.slice(0, 12));
+  const secondCheck = calculateCheckDigit(value.slice(0, 12) + firstCheck);
+  return firstCheck === Number(value[12]) && secondCheck === Number(value[13]);
+};
+
+const isValidBrazilianDocument = (value: string) =>
+  (value.length === 11 && isValidCPF(value)) || (value.length === 14 && isValidCNPJ(value));
+
 serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
 
@@ -31,6 +66,19 @@ serve(async (req) => {
       });
     }
 
+    const cleanDocument = onlyDigits(body.customer.document || "");
+    const cleanPhone = onlyDigits(body.customer.phone || "");
+
+    if (!isValidBrazilianDocument(cleanDocument)) {
+      return new Response(JSON.stringify({
+        error: "CPF ou CNPJ inválido.",
+        errorCode: "INVALID_DOCUMENT",
+      }), {
+        status: 400,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
     const identifier = `farmavida-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
 
     const payload: Record<string, unknown> = {
@@ -39,8 +87,8 @@ serve(async (req) => {
       client: {
         name: body.customer.name,
         email: body.customer.email,
-        phone: body.customer.phone || "(11) 99999-9999",
-        document: (body.customer.document || "").replace(/\D/g, "") || "00000000000",
+        phone: cleanPhone || "11999999999",
+        document: cleanDocument,
       },
       products: body.items.map((it, i) => ({
         id: `prod-${i}`,
