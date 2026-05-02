@@ -1,6 +1,6 @@
 import { useRef, useState } from "react";
 import { Link, Navigate } from "react-router-dom";
-import { ArrowLeft, Check, Loader2, Copy, QrCode, Truck } from "lucide-react";
+import { ArrowLeft, Check, Loader2, Copy, QrCode, Truck, ShieldCheck, Clock, Smartphone } from "lucide-react";
 import { Topbar } from "@/components/store/Topbar";
 import { Header } from "@/components/store/Header";
 import { Footer } from "@/components/store/Footer";
