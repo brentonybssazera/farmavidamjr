@@ -11,11 +11,11 @@ const faqs = [
 ];
 
 export const FAQSection = () => (
-  <section className="bg-secondary/40 py-14 md:py-20">
-    <div className="container max-w-3xl">
-      <div className="text-center mb-8 md:mb-12">
-        <p className="text-xs font-semibold uppercase tracking-widest text-primary mb-2">Perguntas frequentes</p>
-        <h2 className="font-serif-display text-3xl md:text-5xl text-foreground text-balance">
+  <section className="bg-secondary/40 py-10 sm:py-14 md:py-20">
+    <div className="container max-w-3xl px-4">
+      <div className="text-center mb-6 sm:mb-8 md:mb-12">
+        <p className="text-[11px] sm:text-xs font-semibold uppercase tracking-widest text-primary mb-2">Perguntas frequentes</p>
+        <h2 className="font-serif-display text-2xl sm:text-3xl md:text-5xl text-foreground text-balance">
           Tire suas dúvidas
         </h2>
       </div>
@@ -25,13 +25,13 @@ export const FAQSection = () => (
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
       >
-        <Accordion type="single" collapsible className="space-y-3">
+        <Accordion type="single" collapsible className="space-y-2.5 sm:space-y-3">
           {faqs.map((f, i) => (
-            <AccordionItem key={i} value={`item-${i}`} className="bg-card rounded-2xl border border-border px-5 shadow-card">
-              <AccordionTrigger className="text-left font-semibold text-base hover:no-underline py-5">
+            <AccordionItem key={i} value={`item-${i}`} className="bg-card rounded-2xl border border-border px-4 sm:px-5 shadow-card">
+              <AccordionTrigger className="text-left font-semibold text-sm sm:text-base hover:no-underline py-4 sm:py-5">
                 {f.q}
               </AccordionTrigger>
-              <AccordionContent className="text-sm text-muted-foreground leading-relaxed pb-5">
+              <AccordionContent className="text-[13px] sm:text-sm text-muted-foreground leading-relaxed pb-4 sm:pb-5">
                 {f.a}
               </AccordionContent>
             </AccordionItem>
