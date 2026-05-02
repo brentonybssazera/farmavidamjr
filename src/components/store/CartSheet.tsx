@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { Minus, Plus, Trash2, ShoppingBag, ArrowRight } from "lucide-react";
 import { useCart } from "@/stores/cartStore";
@@ -14,8 +14,9 @@ export const CartSheet = ({ open, onOpenChange }: Props) => {
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent className="w-full sm:max-w-md flex flex-col p-0">
-        <SheetHeader className="px-6 pt-6 pb-4 border-b">
-          <SheetTitle className="font-serif-display text-2xl text-foreground">Seu carrinho</SheetTitle>
+        <SheetHeader className="px-6 pt-6 pb-4 border-b text-left">
+          <SheetTitle className="font-display text-2xl text-foreground">Seu carrinho</SheetTitle>
+          <SheetDescription className="text-sm text-muted-foreground">Revise seus produtos antes de finalizar</SheetDescription>
         </SheetHeader>
 
         {items.length === 0 ? (
