@@ -1,14 +1,13 @@
-import { HeartPulse, Phone, Mail, MapPin, MessageCircle } from "lucide-react";
+import { Phone, Mail, MapPin, MessageCircle } from "lucide-react";
 import { Link } from "react-router-dom";
+import logoImg from "@/assets/logo.png";
 
 export const Footer = () => (
   <footer className="bg-foreground text-background mt-16">
     <div className="container py-14 grid md:grid-cols-4 gap-10">
       <div className="md:col-span-2">
-        <div className="flex items-center gap-3 mb-4">
-          <div className="h-12 w-12 rounded-2xl bg-gradient-brand flex items-center justify-center">
-            <HeartPulse className="h-6 w-6 text-primary-foreground" strokeWidth={2.5} />
-          </div>
+        <div className="flex items-center gap-2.5 mb-4">
+          <img src={logoImg} alt="FarmaVida" className="h-11 w-11 object-contain bg-background rounded-lg p-1" />
           <span className="font-serif-display text-2xl">FarmaVida</span>
         </div>
         <p className="text-background/70 max-w-md leading-relaxed">
