@@ -23,7 +23,7 @@ export const Header = ({ onCartClick }: Props) => {
           </div>
           <div className="leading-tight">
             <div className="font-serif-display text-2xl text-foreground">FarmaVida</div>
-            <div className="text-xs text-muted-foreground font-medium">Especialista em Monjaro</div>
+            <div className="text-xs text-muted-foreground font-medium">Especialista em Mounjaro · Porto Velho/RO</div>
           </div>
         </Link>
 
