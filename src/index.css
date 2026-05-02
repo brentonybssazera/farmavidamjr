@@ -76,21 +76,21 @@
   body {
     @apply bg-background text-foreground antialiased;
     font-family: 'Inter', system-ui, -apple-system, sans-serif;
-    font-size: 16px;
+    font-size: 15px;
     line-height: 1.55;
-    font-feature-settings: "cv02", "cv03", "cv04", "cv11", "ss01";
-    letter-spacing: -0.005em;
+    letter-spacing: -0.01em;
   }
   h1, h2, h3, h4 {
-    font-family: 'Fraunces', Georgia, serif;
-    letter-spacing: -0.025em;
-    font-weight: 600;
+    font-family: 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif;
+    letter-spacing: -0.03em;
+    font-weight: 700;
   }
 }
 
 @layer utilities {
-  .font-serif-display { font-family: 'Fraunces', Georgia, serif; font-weight: 600; letter-spacing: -0.025em; }
-  .font-display-bold { font-family: 'Fraunces', Georgia, serif; font-weight: 700; letter-spacing: -0.03em; }
+  .font-display { font-family: 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif; font-weight: 700; letter-spacing: -0.03em; }
+  .font-display-bold { font-family: 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif; font-weight: 800; letter-spacing: -0.035em; }
+  .font-serif-display { font-family: 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif; font-weight: 700; letter-spacing: -0.03em; }
   .bg-gradient-brand { background: var(--gradient-brand); }
   .bg-gradient-promo { background: var(--gradient-promo); }
   .bg-gradient-soft { background: var(--gradient-soft); }

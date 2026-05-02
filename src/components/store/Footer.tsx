@@ -36,10 +36,10 @@ export const Footer = () => (
       <div>
         <h4 className="font-bold mb-4 text-base">Loja</h4>
         <ul className="space-y-3 text-background/80 text-base">
-          <li><a href="#produtos" className="hover:text-accent">Produtos</a></li>
-          <li><Link to="/auth" className="hover:text-accent">Minha conta</Link></li>
+          <li><Link to="/" className="hover:text-accent">Produtos</Link></li>
+          <li><Link to="/como-comprar" className="hover:text-accent">Como comprar</Link></li>
           <li><Link to="/politica-de-entrega" className="hover:text-accent">Política de entrega</Link></li>
-          <li><a href="#como-funciona" className="hover:text-accent">Como comprar</a></li>
+          <li><Link to="/auth" className="hover:text-accent">Minha conta</Link></li>
         </ul>
       </div>
     </div>

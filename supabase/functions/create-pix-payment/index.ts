@@ -6,14 +6,10 @@ const corsHeaders = {
 };
 
 interface PixRequest {
-  amount: number; // em reais
-  customer: {
-    name: string;
-    email: string;
-    document?: string;
-    phone?: string;
-  };
+  amount: number;
+  customer: { name: string; email: string; document?: string; phone?: string };
   items: Array<{ title: string; quantity: number; unitPrice: number }>;
+  shipping?: { name: string; address: string; city: string; state: string; complement?: string };
 }
 
 serve(async (req) => {
@@ -35,55 +31,64 @@ serve(async (req) => {
       });
     }
 
-    const auth = btoa(`${PUBLIC_KEY}:${SECRET_KEY}`);
-    const amountInCents = Math.round(body.amount * 100);
+    const identifier = `farmavida-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
 
-    const payload = {
-      amount: amountInCents,
-      paymentMethod: "pix",
-      customer: {
+    const payload: Record<string, unknown> = {
+      identifier,
+      amount: Number(body.amount.toFixed(2)),
+      client: {
         name: body.customer.name,
         email: body.customer.email,
-        document: { number: (body.customer.document || "00000000000").replace(/\D/g, ""), type: "cpf" },
-        phone: body.customer.phone || "11999999999",
+        phone: body.customer.phone || "(11) 99999-9999",
+        document: (body.customer.document || "").replace(/\D/g, "") || "00000000000",
       },
-      items: body.items.map((it) => ({
-        title: it.title,
+      products: body.items.map((it, i) => ({
+        id: `prod-${i}`,
+        name: it.title,
         quantity: it.quantity,
-        unitPrice: Math.round(it.unitPrice * 100),
-        tangible: true,
+        price: Number(it.unitPrice.toFixed(2)),
       })),
-      pix: { expiresInDays: 1 },
+      metadata: {
+        source: "farmavida",
+        ...(body.shipping ? {
+          shippingName: body.shipping.name,
+          shippingAddress: body.shipping.address,
+          shippingCity: body.shipping.city,
+          shippingState: body.shipping.state,
+          shippingComplement: body.shipping.complement || "",
+        } : {}),
+      },
     };
 
-    const response = await fetch("https://api.sigilopay.com.br/v1/transactions", {
+    const response = await fetch("https://app.sigilopay.com.br/api/v1/gateway/pix/receive", {
       method: "POST",
       headers: {
-        Authorization: `Basic ${auth}`,
+        "x-public-key": PUBLIC_KEY,
+        "x-secret-key": SECRET_KEY,
         "Content-Type": "application/json",
       },
       body: JSON.stringify(payload),
     });
 
     const data = await response.json().catch(() => ({}));
-    console.log("SigiloPay response", response.status, JSON.stringify(data));
+    console.log("SigiloPay status", response.status, "body", JSON.stringify(data).slice(0, 800));
 
     if (!response.ok) {
-      return new Response(JSON.stringify({ error: "Falha ao gerar PIX", details: data }), {
-        status: response.status, headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
+      return new Response(JSON.stringify({
+        error: data?.message || "Falha ao gerar PIX",
+        errorCode: data?.errorCode,
+        details: data,
+      }), { status: response.status, headers: { ...corsHeaders, "Content-Type": "application/json" } });
     }
 
-    // Normaliza resposta para o frontend
-    const pix = data.pix || data.pixPayment || {};
+    const pix = data.pix || {};
     return new Response(JSON.stringify({
-      id: data.id || data.transactionId,
+      id: data.transactionId,
       status: data.status,
-      qrCode: pix.qrcode || pix.qrCode || pix.payload || data.qrcode,
-      qrCodeImage: pix.qrCodeImage || pix.qr_code_image || data.qrCodeImage,
-      expiresAt: pix.expirationDate || pix.expiresAt,
+      qrCode: pix.code,
+      qrCodeImage: pix.base64 || pix.image,
       amount: body.amount,
-      raw: data,
+      identifier,
     }), { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } });
   } catch (err) {
     console.error("create-pix-payment error", err);
