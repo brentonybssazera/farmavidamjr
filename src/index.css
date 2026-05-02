@@ -75,17 +75,23 @@
   html { -webkit-text-size-adjust: 100%; }
   body {
     @apply bg-background text-foreground antialiased;
-    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
     font-size: 17px;
     line-height: 1.6;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11", "ss01";
   }
-  h1, h2, h3 { font-family: 'DM Serif Display', Georgia, serif; letter-spacing: -0.01em; }
+  h1, h2, h3, h4 {
+    font-family: 'Fraunces', Georgia, serif;
+    letter-spacing: -0.02em;
+    font-weight: 600;
+  }
   /* Larger interactive targets for accessibility */
   button, a, input, select { min-height: 44px; }
 }
 
 @layer utilities {
-  .font-serif-display { font-family: 'DM Serif Display', Georgia, serif; }
+  .font-serif-display { font-family: 'Fraunces', Georgia, serif; font-weight: 600; letter-spacing: -0.025em; }
+  .font-display-bold { font-family: 'Fraunces', Georgia, serif; font-weight: 800; letter-spacing: -0.03em; }
   .bg-gradient-brand { background: var(--gradient-brand); }
   .bg-gradient-promo { background: var(--gradient-promo); }
   .bg-gradient-soft { background: var(--gradient-soft); }
