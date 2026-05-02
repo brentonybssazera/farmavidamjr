@@ -1,30 +1,60 @@
 import { useState } from "react";
-import { Link, Navigate, useNavigate } from "react-router-dom";
-import { ArrowLeft, Check, Loader2, Upload } from "lucide-react";
+import { Link, Navigate } from "react-router-dom";
+import { ArrowLeft, Check, Loader2, Copy, QrCode, Truck } from "lucide-react";
 import { Topbar } from "@/components/store/Topbar";
 import { Header } from "@/components/store/Header";
 import { Footer } from "@/components/store/Footer";
 import { CartSheet } from "@/components/store/CartSheet";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { useCart } from "@/stores/cartStore";
 import { formatBRL } from "@/lib/products";
+import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
 const Checkout = () => {
   const { items, total, clear } = useCart();
   const [cartOpen, setCartOpen] = useState(false);
   const [placing, setPlacing] = useState(false);
-  const navigate = useNavigate();
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
+  const [document, setDocument] = useState("");
+  const [pix, setPix] = useState<{ qrCode?: string; qrCodeImage?: string; id?: string } | null>(null);
 
-  if (items.length === 0) return <Navigate to="/" replace />;
+  if (items.length === 0 && !pix) return <Navigate to="/" replace />;
 
-  const handlePlace = () => {
+  const handlePlace = async () => {
+    if (!name || !email || !document) {
+      toast.error("Preencha nome, e-mail e CPF");
+      return;
+    }
     setPlacing(true);
-    setTimeout(() => {
-      toast.success("Pedido recebido!", { description: "Em breve nossa equipe entrará em contato.", position: "top-center" });
+    try {
+      const { data, error } = await supabase.functions.invoke("create-pix-payment", {
+        body: {
+          amount: total(),
+          customer: { name, email, document, phone },
+          items: items.map((i) => ({ title: i.product.name, quantity: i.quantity, unitPrice: i.product.price })),
+        },
+      });
+      if (error) throw error;
+      if (!data?.qrCode) throw new Error("PIX não retornado pelo gateway");
+      setPix(data);
       clear();
-      navigate("/");
-    }, 1200);
+      toast.success("PIX gerado! Escaneie ou copie o código");
+    } catch (err: any) {
+      console.error(err);
+      toast.error("Erro ao gerar pagamento", { description: err?.message ?? "Tente novamente" });
+    } finally {
+      setPlacing(false);
+    }
+  };
+
+  const copy = (text: string) => {
+    navigator.clipboard.writeText(text);
+    toast.success("Código copiado!");
   };
 
   return (
@@ -33,47 +63,100 @@ const Checkout = () => {
       <Header onCartClick={() => setCartOpen(true)} />
       <CartSheet open={cartOpen} onOpenChange={setCartOpen} />
 
-      <main className="flex-1 container py-8 max-w-3xl">
-        <Link to="/" className="inline-flex items-center gap-2 text-base text-muted-foreground hover:text-primary mb-6 font-semibold">
-          <ArrowLeft className="h-5 w-5" /> Continuar comprando
+      <main className="flex-1 container py-8 max-w-2xl">
+        <Link to="/" className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-primary mb-6 font-medium">
+          <ArrowLeft className="h-4 w-4" /> Continuar comprando
         </Link>
 
-        <h1 className="font-serif-display text-4xl text-foreground mb-6">Finalizar pedido</h1>
+        {pix ? (
+          <div className="bg-card rounded-2xl border border-border shadow-card p-8 text-center space-y-5">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-success-soft text-success text-xs font-semibold">
+              <QrCode className="h-3.5 w-3.5" /> PIX gerado
+            </div>
+            <h1 className="font-serif-display text-3xl text-foreground">Pague com PIX</h1>
+            <p className="text-muted-foreground text-sm">Escaneie o QR Code ou copie o código abaixo. O pagamento é confirmado em segundos.</p>
 
-        <div className="bg-card rounded-3xl border-2 border-border shadow-card p-6 mb-6">
-          <h2 className="font-bold text-xl mb-4">Resumo do pedido</h2>
-          <div className="space-y-3">
-            {items.map((it) => (
-              <div key={it.product.id} className="flex justify-between items-center py-2 border-b border-border last:border-0">
-                <div className="flex items-center gap-3">
-                  <img src={it.product.image} alt="" className="h-14 w-14 rounded-xl object-cover bg-muted" />
+            {pix.qrCodeImage && (
+              <div className="flex justify-center">
+                <img src={pix.qrCodeImage.startsWith("data:") ? pix.qrCodeImage : `data:image/png;base64,${pix.qrCodeImage}`}
+                  alt="QR Code PIX" className="h-64 w-64 border border-border rounded-xl" />
+              </div>
+            )}
+
+            {pix.qrCode && (
+              <div className="bg-secondary/60 rounded-xl p-4 text-left">
+                <p className="text-xs font-semibold text-muted-foreground mb-2">PIX copia e cola</p>
+                <p className="text-xs font-mono break-all text-foreground">{pix.qrCode}</p>
+                <Button onClick={() => copy(pix.qrCode!)} className="w-full mt-3 rounded-full h-11" variant="outline">
+                  <Copy className="h-4 w-4 mr-2" /> Copiar código PIX
+                </Button>
+              </div>
+            )}
+
+            <p className="text-xs text-muted-foreground">Após o pagamento, enviaremos atualização por e-mail e WhatsApp.</p>
+          </div>
+        ) : (
+          <>
+            <h1 className="font-serif-display text-3xl md:text-4xl text-foreground mb-6">Finalizar pedido</h1>
+
+            <div className="bg-card rounded-2xl border border-border shadow-card p-6 mb-5">
+              <h2 className="font-semibold text-base mb-4 text-foreground">Resumo</h2>
+              <div className="space-y-3">
+                {items.map((it) => (
+                  <div key={it.product.id} className="flex justify-between items-center py-2 border-b border-border last:border-0">
+                    <div className="flex items-center gap-3">
+                      <img src={it.product.image} alt="" className="h-12 w-12 rounded-lg object-cover bg-muted" />
+                      <div>
+                        <p className="font-medium text-sm">{it.product.name}</p>
+                        <p className="text-xs text-muted-foreground">Qtd: {it.quantity}</p>
+                      </div>
+                    </div>
+                    <p className="font-semibold text-sm">{formatBRL(it.product.price * it.quantity)}</p>
+                  </div>
+                ))}
+              </div>
+              <div className="flex items-center gap-2 mt-4 pt-3 border-t border-border text-sm text-success">
+                <Truck className="h-4 w-4" /> Frete grátis
+              </div>
+              <div className="flex justify-between items-baseline mt-2">
+                <span className="text-sm text-muted-foreground">Total</span>
+                <span className="font-serif-display text-3xl text-foreground">{formatBRL(total())}</span>
+              </div>
+            </div>
+
+            <div className="bg-card rounded-2xl border border-border shadow-card p-6 mb-5 space-y-4">
+              <h2 className="font-semibold text-base text-foreground">Seus dados</h2>
+              <div className="space-y-3">
+                <div>
+                  <Label htmlFor="name" className="text-xs">Nome completo</Label>
+                  <Input id="name" value={name} onChange={(e) => setName(e.target.value)} className="rounded-lg h-11 mt-1" />
+                </div>
+                <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <p className="font-semibold">{it.product.name}</p>
-                    <p className="text-sm text-muted-foreground">Qtd: {it.quantity}</p>
+                    <Label htmlFor="email" className="text-xs">E-mail</Label>
+                    <Input id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} className="rounded-lg h-11 mt-1" />
+                  </div>
+                  <div>
+                    <Label htmlFor="phone" className="text-xs">Telefone</Label>
+                    <Input id="phone" value={phone} onChange={(e) => setPhone(e.target.value)} className="rounded-lg h-11 mt-1" />
                   </div>
                 </div>
-                <p className="font-bold">{formatBRL(it.product.price * it.quantity)}</p>
+                <div>
+                  <Label htmlFor="doc" className="text-xs">CPF</Label>
+                  <Input id="doc" value={document} onChange={(e) => setDocument(e.target.value)} className="rounded-lg h-11 mt-1" />
+                </div>
               </div>
-            ))}
-          </div>
-          <div className="flex justify-between items-baseline mt-5 pt-4 border-t-2 border-border">
-            <span className="text-lg">Total</span>
-            <span className="font-serif-display text-3xl text-foreground">{formatBRL(total())}</span>
-          </div>
-        </div>
+            </div>
 
-        <div className="bg-info-soft border-2 border-info/20 rounded-3xl p-6 mb-6 flex gap-4">
-          <Upload className="h-8 w-8 text-info flex-shrink-0 mt-1" />
-          <div>
-            <p className="font-bold text-lg">Envio da receita médica</p>
-            <p className="text-muted-foreground">Após confirmar o pedido, nossa equipe entrará em contato pelo WhatsApp para coletar a foto da receita branca de controle especial.</p>
-          </div>
-        </div>
-
-        <Button onClick={handlePlace} disabled={placing} size="lg"
-          className="w-full h-16 rounded-2xl text-lg font-bold bg-gradient-promo text-success-foreground shadow-brand">
-          {placing ? <Loader2 className="h-6 w-6 animate-spin" /> : (<><Check className="h-6 w-6 mr-2" strokeWidth={3} /> Confirmar pedido</>)}
-        </Button>
+            <Button onClick={handlePlace} disabled={placing}
+              className="w-full h-14 rounded-full text-base font-semibold bg-primary hover:bg-primary/90 text-primary-foreground shadow-brand">
+              {placing ? <Loader2 className="h-5 w-5 animate-spin" /> : (<><QrCode className="h-5 w-5 mr-2" /> Gerar PIX · {formatBRL(total())}</>)}
+            </Button>
+            <p className="text-xs text-muted-foreground text-center mt-3">
+              Ao confirmar, você concorda em enviar a receita médica via WhatsApp após o pagamento.
+            </p>
+          </>
+        )}
       </main>
 
       <Footer />

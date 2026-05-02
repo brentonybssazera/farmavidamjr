@@ -4,60 +4,60 @@
 
 @layer base {
   :root {
-    /* FarmaVida — vibrant pharmacy palette: purple, green, pink, white, black, gray, blue */
+    /* FarmaVida — refined pharmacy palette: roxo dominante, espaços brancos, mínimo ruído */
     --background: 0 0% 100%;
-    --foreground: 240 15% 12%;
+    --foreground: 260 20% 12%;
 
     --card: 0 0% 100%;
-    --card-foreground: 240 15% 12%;
+    --card-foreground: 260 20% 12%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 240 15% 12%;
+    --popover-foreground: 260 20% 12%;
 
-    /* Brand purple — confiança farmacêutica */
-    --primary: 264 75% 48%;
+    /* Roxo refinado — única cor dominante */
+    --primary: 262 60% 42%;
     --primary-foreground: 0 0% 100%;
-    --primary-soft: 264 100% 97%;
+    --primary-soft: 262 60% 97%;
 
-    /* Pink accent — calor humano */
-    --accent: 335 85% 60%;
+    /* Accent rosa suave — usado com parcimônia */
+    --accent: 340 70% 55%;
     --accent-foreground: 0 0% 100%;
-    --accent-soft: 335 100% 97%;
+    --accent-soft: 340 80% 97%;
 
-    /* Green success — saúde */
-    --success: 152 70% 40%;
+    /* Verde success */
+    --success: 152 55% 38%;
     --success-foreground: 0 0% 100%;
-    --success-soft: 152 70% 95%;
+    --success-soft: 152 55% 95%;
 
-    /* Blue info */
-    --info: 215 90% 55%;
+    /* Azul info */
+    --info: 215 70% 50%;
     --info-foreground: 0 0% 100%;
-    --info-soft: 215 100% 96%;
+    --info-soft: 215 70% 96%;
 
-    --secondary: 240 15% 96%;
-    --secondary-foreground: 240 15% 12%;
+    --secondary: 260 15% 97%;
+    --secondary-foreground: 260 20% 12%;
 
-    --muted: 240 10% 95%;
-    --muted-foreground: 240 8% 42%;
+    --muted: 260 10% 96%;
+    --muted-foreground: 260 8% 45%;
 
-    --destructive: 0 75% 52%;
+    --destructive: 0 70% 50%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 240 12% 90%;
-    --input: 240 12% 90%;
-    --ring: 264 75% 48%;
+    --border: 260 15% 92%;
+    --input: 260 15% 92%;
+    --ring: 262 60% 42%;
 
     --radius: 1rem;
 
-    --gradient-brand: linear-gradient(135deg, hsl(264 75% 48%) 0%, hsl(285 75% 55%) 50%, hsl(335 85% 60%) 100%);
-    --gradient-promo: linear-gradient(135deg, hsl(152 70% 40%) 0%, hsl(170 75% 42%) 100%);
-    --gradient-soft: linear-gradient(180deg, hsl(264 100% 99%) 0%, hsl(335 100% 99%) 100%);
-    --gradient-blue: linear-gradient(135deg, hsl(215 90% 55%) 0%, hsl(264 75% 55%) 100%);
+    --gradient-brand: linear-gradient(135deg, hsl(262 60% 42%) 0%, hsl(275 55% 50%) 100%);
+    --gradient-promo: linear-gradient(135deg, hsl(152 55% 38%) 0%, hsl(168 60% 40%) 100%);
+    --gradient-soft: linear-gradient(180deg, hsl(262 60% 99%) 0%, hsl(0 0% 100%) 100%);
+    --gradient-hero: linear-gradient(135deg, hsl(262 60% 42%) 0%, hsl(282 50% 45%) 100%);
 
-    --shadow-brand: 0 12px 32px -12px hsl(264 75% 48% / 0.35);
-    --shadow-pink: 0 12px 32px -12px hsl(335 85% 60% / 0.35);
-    --shadow-card: 0 4px 16px -4px hsl(240 15% 12% / 0.08);
-    --shadow-card-hover: 0 16px 40px -12px hsl(264 75% 48% / 0.25);
+    --shadow-brand: 0 8px 24px -8px hsl(262 60% 42% / 0.25);
+    --shadow-pink: 0 8px 24px -8px hsl(340 70% 55% / 0.25);
+    --shadow-card: 0 1px 3px 0 hsl(260 20% 12% / 0.04), 0 1px 2px 0 hsl(260 20% 12% / 0.03);
+    --shadow-card-hover: 0 12px 32px -8px hsl(262 60% 42% / 0.18);
 
     --sidebar-background: 0 0% 98%;
     --sidebar-foreground: 240 5.3% 26.1%;
@@ -76,26 +76,25 @@
   body {
     @apply bg-background text-foreground antialiased;
     font-family: 'Inter', system-ui, -apple-system, sans-serif;
-    font-size: 17px;
-    line-height: 1.6;
+    font-size: 16px;
+    line-height: 1.55;
     font-feature-settings: "cv02", "cv03", "cv04", "cv11", "ss01";
+    letter-spacing: -0.005em;
   }
   h1, h2, h3, h4 {
     font-family: 'Fraunces', Georgia, serif;
-    letter-spacing: -0.02em;
+    letter-spacing: -0.025em;
     font-weight: 600;
   }
-  /* Larger interactive targets for accessibility */
-  button, a, input, select { min-height: 44px; }
 }
 
 @layer utilities {
   .font-serif-display { font-family: 'Fraunces', Georgia, serif; font-weight: 600; letter-spacing: -0.025em; }
-  .font-display-bold { font-family: 'Fraunces', Georgia, serif; font-weight: 800; letter-spacing: -0.03em; }
+  .font-display-bold { font-family: 'Fraunces', Georgia, serif; font-weight: 700; letter-spacing: -0.03em; }
   .bg-gradient-brand { background: var(--gradient-brand); }
   .bg-gradient-promo { background: var(--gradient-promo); }
   .bg-gradient-soft { background: var(--gradient-soft); }
-  .bg-gradient-blue { background: var(--gradient-blue); }
+  .bg-gradient-hero { background: var(--gradient-hero); }
   .shadow-brand { box-shadow: var(--shadow-brand); }
   .shadow-pink { box-shadow: var(--shadow-pink); }
   .shadow-card { box-shadow: var(--shadow-card); }
