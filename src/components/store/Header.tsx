@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { ShoppingCart, User, LogOut } from "lucide-react";
+import { ShoppingCart, User, LogOut, UserCircle2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useCart } from "@/stores/cartStore";
@@ -30,9 +30,9 @@ export const Header = ({ onCartClick }: Props) => {
           {user ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="rounded-full h-11 px-4 hidden sm:flex hover:bg-primary-soft">
-                  <User className="h-4 w-4 mr-2 text-primary" />
-                  <span className="font-medium text-sm">Minha conta</span>
+                <Button variant="ghost" className="rounded-full h-10 sm:h-11 px-2.5 sm:px-4 hover:bg-primary-soft">
+                  <UserCircle2 className="h-5 w-5 sm:h-4 sm:w-4 sm:mr-2 text-primary" />
+                  <span className="font-medium text-sm hidden sm:inline">Minha conta</span>
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-64 rounded-2xl p-2">
@@ -50,10 +50,10 @@ export const Header = ({ onCartClick }: Props) => {
               </DropdownMenuContent>
             </DropdownMenu>
           ) : (
-            <Button asChild variant="ghost" className="rounded-full h-11 px-4 hidden sm:flex hover:bg-primary-soft">
+            <Button asChild variant="ghost" className="rounded-full h-10 sm:h-11 px-2.5 sm:px-4 hover:bg-primary-soft">
               <Link to="/auth">
-                <User className="h-4 w-4 mr-2 text-primary" />
-                <span className="font-medium text-sm">Entrar / Criar conta</span>
+                <User className="h-5 w-5 sm:h-4 sm:w-4 sm:mr-2 text-primary" />
+                <span className="font-medium text-sm hidden sm:inline">Entrar</span>
               </Link>
             </Button>
           )}
