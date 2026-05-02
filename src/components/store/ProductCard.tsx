@@ -1,71 +1,88 @@
 import { Link } from "react-router-dom";
-import { Loader2, Plus } from "lucide-react";
+import { Plus, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { ShopifyProduct, formatPrice } from "@/lib/shopify";
-import { useCartStore } from "@/stores/cartStore";
+import { Product, formatBRL } from "@/lib/products";
+import { useCart } from "@/stores/cartStore";
 import { toast } from "sonner";
 
-export const ProductCard = ({ product }: { product: ShopifyProduct }) => {
-  const addItem = useCartStore((s) => s.addItem);
-  const isLoading = useCartStore((s) => s.isLoading);
-  const variant = product.node.variants.edges[0]?.node;
-  const image = product.node.images.edges[0]?.node;
-  const price = product.node.priceRange.minVariantPrice;
+export const ProductCard = ({ product }: { product: Product }) => {
+  const add = useCart((s) => s.add);
 
-  const handleAdd = async (e: React.MouseEvent) => {
+  const handleAdd = (e: React.MouseEvent) => {
     e.preventDefault();
-    if (!variant) return;
-    await addItem({
-      product,
-      variantId: variant.id,
-      variantTitle: variant.title,
-      price: variant.price,
-      quantity: 1,
-      selectedOptions: variant.selectedOptions || [],
-    });
-    toast.success("Adicionado ao carrinho", {
-      description: product.node.title,
+    add(product);
+    toast.success("Adicionado ao carrinho!", {
+      description: product.name,
       position: "top-center",
+      duration: 2200,
     });
   };
 
+  const discount = product.oldPrice ? Math.round((1 - product.price / product.oldPrice) * 100) : 0;
+
   return (
-    <Link
-      to={`/product/${product.node.handle}`}
-      className="group relative flex flex-col rounded-2xl bg-gradient-card border border-border/60 overflow-hidden shadow-card hover:shadow-glow hover:border-primary/30 transition-all duration-500"
-    >
-      <div className="aspect-[4/5] overflow-hidden bg-secondary">
-        {image ? (
+    <article className="group relative bg-card rounded-3xl border-2 border-border overflow-hidden shadow-card hover:shadow-card-hover hover:border-primary/40 transition-all duration-300">
+      {product.badge && (
+        <span className="absolute top-4 left-4 z-10 px-3 py-1.5 rounded-full bg-accent text-accent-foreground text-xs font-bold uppercase tracking-wide shadow-pink">
+          {product.badge}
+        </span>
+      )}
+      {discount > 0 && (
+        <span className="absolute top-4 right-4 z-10 px-3 py-1.5 rounded-full bg-success text-success-foreground text-sm font-extrabold shadow-card">
+          -{discount}%
+        </span>
+      )}
+
+      <Link to={`/produto/${product.id}`} className="block">
+        <div className="aspect-square bg-gradient-soft p-6 flex items-center justify-center overflow-hidden">
           <img
-            src={image.url}
-            alt={image.altText || product.node.title}
+            src={product.image}
+            alt={product.name}
             loading="lazy"
-            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+            width={512}
+            height={512}
+            className="max-h-full max-w-full object-contain group-hover:scale-105 transition-transform duration-500"
           />
-        ) : (
-          <div className="w-full h-full flex items-center justify-center text-muted-foreground text-sm">Sem imagem</div>
-        )}
-      </div>
-      <div className="p-5 flex flex-col flex-1 gap-3">
-        <div className="flex-1">
-          <h3 className="font-display text-xl font-semibold text-primary leading-tight">{product.node.title}</h3>
-          <p className="text-sm text-muted-foreground mt-1.5 line-clamp-2">{product.node.description}</p>
         </div>
-        <div className="flex items-end justify-between pt-3 border-t border-border/60">
-          <div>
-            <p className="text-[10px] uppercase tracking-wider text-muted-foreground">A partir de</p>
-            <p className="font-display text-2xl font-bold text-foreground">{formatPrice(price.amount, price.currencyCode)}</p>
+      </Link>
+
+      <div className="p-5 space-y-3">
+        <div>
+          <p className="text-xs font-semibold uppercase tracking-wider text-primary">{product.dose}</p>
+          <Link to={`/produto/${product.id}`}>
+            <h3 className="font-serif-display text-2xl text-foreground leading-tight mt-0.5 hover:text-primary transition-colors">
+              {product.name}
+            </h3>
+          </Link>
+        </div>
+
+        <p className="text-sm text-muted-foreground line-clamp-2 min-h-[40px]">{product.description}</p>
+
+        <div className="flex items-center gap-2 text-sm">
+          <Check className="h-4 w-4 text-success" strokeWidth={3} />
+          <span className="text-muted-foreground">Em estoque · Envio em 24h</span>
+        </div>
+
+        <div className="pt-3 border-t border-border">
+          {product.oldPrice && (
+            <p className="text-sm text-muted-foreground line-through">{formatBRL(product.oldPrice)}</p>
+          )}
+          <div className="flex items-end justify-between gap-2">
+            <div>
+              <p className="font-serif-display text-3xl text-foreground leading-none">{formatBRL(product.price)}</p>
+              <p className="text-xs text-success font-semibold mt-1">12x de {formatBRL(product.price / 12)}</p>
+            </div>
           </div>
+
           <Button
             onClick={handleAdd}
-            size="icon"
-            className="h-11 w-11 rounded-full bg-primary hover:bg-accent shadow-soft"
-            disabled={isLoading || !variant}
+            size="lg"
+            className="w-full mt-4 rounded-2xl h-14 text-base font-bold bg-primary hover:bg-primary/90 text-primary-foreground shadow-brand"
           >
-            {isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Plus className="h-5 w-5" strokeWidth={2.5} />}
+            <Plus className="h-5 w-5 mr-2" strokeWidth={3} /> Adicionar ao carrinho
           </Button>
         </div>
       </div>
-    </Link>
+    </article>
   );
 };
