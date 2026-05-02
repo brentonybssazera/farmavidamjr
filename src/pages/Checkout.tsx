@@ -146,29 +146,29 @@ const Checkout = () => {
       <Header onCartClick={() => setCartOpen(true)} />
       <CartSheet open={cartOpen} onOpenChange={setCartOpen} />
 
-      <main className="flex-1 container py-8 max-w-2xl">
-        <Link to="/" className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-primary mb-4 font-medium">
+      <main className="flex-1 container py-5 sm:py-8 max-w-2xl px-4">
+        <Link to="/" className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-primary mb-3 sm:mb-4 font-medium">
           <ArrowLeft className="h-4 w-4" /> Continuar comprando
         </Link>
 
         {pix ? (
-          <div className="bg-card rounded-2xl border border-border shadow-card p-5 sm:p-8 text-center space-y-5">
+          <div className="bg-card rounded-2xl border border-border shadow-card p-4 sm:p-8 text-center space-y-4 sm:space-y-5">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-success-soft text-success text-xs font-semibold">
               <QrCode className="h-3.5 w-3.5" /> PIX gerado
             </div>
             <h1 className="font-serif-display text-2xl sm:text-3xl text-foreground">Pague com PIX</h1>
 
-            <div className="bg-primary-soft/60 rounded-xl py-4 px-5 inline-flex flex-col items-center mx-auto">
+            <div className="bg-primary-soft/60 rounded-xl py-3 px-5 inline-flex flex-col items-center mx-auto">
               <span className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">Valor a pagar</span>
-              <span className="font-serif-display text-3xl sm:text-4xl text-primary leading-tight mt-1">{formatBRL(pixAmount)}</span>
+              <span className="font-serif-display text-2xl sm:text-4xl text-primary leading-tight mt-1">{formatBRL(pixAmount)}</span>
             </div>
 
-            <p className="text-muted-foreground text-sm">Escaneie o QR Code ou copie o código abaixo. O pagamento é confirmado em segundos.</p>
+            <p className="text-muted-foreground text-xs sm:text-sm px-1">Escaneie o QR Code ou copie o código abaixo. Confirmação em segundos.</p>
 
             {pix.qrCodeImage && (
               <div className="flex justify-center">
                 <img src={pix.qrCodeImage.startsWith("data:") ? pix.qrCodeImage : `data:image/png;base64,${pix.qrCodeImage}`}
-                  alt="QR Code PIX" className="h-56 w-56 sm:h-64 sm:w-64 border border-border rounded-xl bg-white p-2" />
+                  alt="QR Code PIX" className="h-52 w-52 sm:h-64 sm:w-64 border border-border rounded-xl bg-white p-2" />
               </div>
             )}
 
@@ -182,25 +182,25 @@ const Checkout = () => {
               </div>
             )}
 
-            <p className="text-xs text-muted-foreground">Após o pagamento, enviaremos atualização por e-mail e WhatsApp.</p>
+            <p className="text-[11px] sm:text-xs text-muted-foreground px-2">Após o pagamento, enviaremos atualização por e-mail e WhatsApp.</p>
           </div>
         ) : (
           <>
             <h1 className="font-serif-display text-2xl sm:text-3xl md:text-4xl text-foreground mb-5">Finalizar pedido</h1>
 
-            <div className="bg-card rounded-2xl border border-border shadow-card p-6 mb-5">
+            <div className="bg-card rounded-2xl border border-border shadow-card p-4 sm:p-6 mb-4 sm:mb-5">
               <h2 className="font-semibold text-base mb-4 text-foreground">Resumo</h2>
               <div className="space-y-3">
                 {items.map((it) => (
                   <div key={it.product.id} className="flex justify-between items-center py-2 border-b border-border last:border-0">
-                    <div className="flex items-center gap-3">
-                      <img src={it.product.image} alt="" className="h-12 w-12 rounded-lg object-cover bg-muted" />
-                      <div>
-                        <p className="font-medium text-sm">{it.product.name}</p>
+                    <div className="flex items-center gap-3 min-w-0">
+                      <img src={it.product.image} alt="" className="h-12 w-12 rounded-lg object-cover bg-muted flex-shrink-0" />
+                      <div className="min-w-0">
+                        <p className="font-medium text-sm truncate">{it.product.name}</p>
                         <p className="text-xs text-muted-foreground">Qtd: {it.quantity}</p>
                       </div>
                     </div>
-                    <p className="font-semibold text-sm">{formatBRL(it.product.price * it.quantity)}</p>
+                    <p className="font-semibold text-sm flex-shrink-0 ml-2">{formatBRL(it.product.price * it.quantity)}</p>
                   </div>
                 ))}
               </div>
@@ -209,35 +209,35 @@ const Checkout = () => {
               </div>
               <div className="flex justify-between items-baseline mt-2">
                 <span className="text-sm text-muted-foreground">Total</span>
-                <span className="font-serif-display text-3xl text-foreground">{formatBRL(total())}</span>
+                <span className="font-serif-display text-2xl sm:text-3xl text-foreground">{formatBRL(total())}</span>
               </div>
             </div>
 
-            <div className="bg-card rounded-2xl border border-border shadow-card p-6 mb-5 space-y-4">
+            <div className="bg-card rounded-2xl border border-border shadow-card p-4 sm:p-6 mb-4 sm:mb-5 space-y-4">
               <h2 className="font-semibold text-base text-foreground">Seus dados</h2>
               <div className="space-y-3">
                 <div>
                   <Label htmlFor="name" className="text-xs">Nome completo</Label>
                   <Input id="name" value={name} onChange={(e) => setName(e.target.value)} className="rounded-lg h-11 mt-1" />
                 </div>
-                <div className="grid grid-cols-2 gap-3">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div>
                     <Label htmlFor="email" className="text-xs">E-mail</Label>
-                    <Input id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} className="rounded-lg h-11 mt-1" />
+                    <Input id="email" type="email" inputMode="email" value={email} onChange={(e) => setEmail(e.target.value)} className="rounded-lg h-11 mt-1" />
                   </div>
                   <div>
                     <Label htmlFor="phone" className="text-xs">Telefone</Label>
-                    <Input id="phone" value={phone} onChange={(e) => setPhone(e.target.value)} className="rounded-lg h-11 mt-1" />
+                    <Input id="phone" inputMode="tel" value={phone} onChange={(e) => setPhone(e.target.value)} className="rounded-lg h-11 mt-1" />
                   </div>
                 </div>
                 <div>
                   <Label htmlFor="doc" className="text-xs">CPF ou CNPJ</Label>
-                  <Input id="doc" value={document} onChange={(e) => setDocument(e.target.value)} placeholder="Somente números" className="rounded-lg h-11 mt-1" />
+                  <Input id="doc" inputMode="numeric" value={document} onChange={(e) => setDocument(e.target.value)} placeholder="Somente números" className="rounded-lg h-11 mt-1" />
                 </div>
               </div>
             </div>
 
-            <div className="bg-card rounded-2xl border border-border shadow-card p-6 mb-5 space-y-4">
+            <div className="bg-card rounded-2xl border border-border shadow-card p-4 sm:p-6 mb-4 sm:mb-5 space-y-4">
               <h2 className="font-semibold text-base text-foreground">Endereço de entrega</h2>
               <div className="space-y-3">
                 <div>
@@ -267,10 +267,10 @@ const Checkout = () => {
             </div>
 
             <Button onClick={handlePlace} disabled={placing}
-              className="w-full h-14 rounded-full text-base font-semibold bg-primary hover:bg-primary/90 text-primary-foreground shadow-brand">
-              {placing ? <Loader2 className="h-5 w-5 animate-spin" /> : (<><QrCode className="h-5 w-5 mr-2" /> Gerar PIX · {formatBRL(total())}</>)}
+              className="w-full h-14 rounded-full text-sm sm:text-base font-semibold bg-primary hover:bg-primary/90 text-primary-foreground shadow-brand">
+              {placing ? <Loader2 className="h-5 w-5 animate-spin" /> : (<><QrCode className="h-5 w-5 mr-2 flex-shrink-0" /> <span className="truncate">Gerar PIX · {formatBRL(total())}</span></>)}
             </Button>
-            <p className="text-xs text-muted-foreground text-center mt-3">
+            <p className="text-[11px] sm:text-xs text-muted-foreground text-center mt-3 px-2">
               Ao confirmar, você concorda em enviar a receita médica via WhatsApp após o pagamento.
             </p>
           </>
