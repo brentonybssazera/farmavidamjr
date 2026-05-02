@@ -17,16 +17,16 @@ export const Header = ({ onCartClick }: Props) => {
 
   return (
     <header className="sticky top-0 z-40 bg-background/95 backdrop-blur border-b border-border shadow-sm">
-      <div className="container flex items-center justify-between py-3 gap-4">
-        <Link to="/" className="flex items-center gap-2.5">
-          <img src={logoImg} alt="FarmaVida" className="h-11 w-11 object-contain" />
-          <div className="leading-tight">
-            <div className="font-serif-display text-xl text-foreground tracking-tight">FarmaVida</div>
-            <div className="text-[11px] text-muted-foreground font-medium tracking-wide uppercase">Mounjaro · Porto Velho/RO</div>
+      <div className="container flex items-center justify-between py-2.5 sm:py-3 gap-2 sm:gap-4">
+        <Link to="/" className="flex items-center gap-2 sm:gap-2.5 min-w-0">
+          <img src={logoImg} alt="FarmaVida" className="h-9 w-9 sm:h-11 sm:w-11 object-contain flex-shrink-0" />
+          <div className="leading-tight min-w-0">
+            <div className="font-serif-display text-lg sm:text-xl text-foreground tracking-tight truncate">FarmaVida</div>
+            <div className="hidden sm:block text-[11px] text-muted-foreground font-medium tracking-wide uppercase">Mounjaro · Porto Velho/RO</div>
           </div>
         </Link>
 
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0">
           {user ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -60,12 +60,12 @@ export const Header = ({ onCartClick }: Props) => {
 
           <Button
             onClick={onCartClick}
-            className="rounded-full h-11 px-5 bg-primary hover:bg-primary/90 text-primary-foreground relative"
+            className="rounded-full h-10 sm:h-11 px-3.5 sm:px-5 bg-primary hover:bg-primary/90 text-primary-foreground relative"
           >
-            <ShoppingCart className="h-4 w-4 mr-2" strokeWidth={2.5} />
-            <span className="font-semibold text-sm">Carrinho</span>
+            <ShoppingCart className="h-4 w-4 sm:mr-2" strokeWidth={2.5} />
+            <span className="font-semibold text-sm hidden sm:inline">Carrinho</span>
             {count > 0 && (
-              <Badge className="ml-2 h-5 min-w-5 rounded-full bg-accent text-accent-foreground border-0 font-bold text-xs px-1.5">
+              <Badge className="ml-1.5 sm:ml-2 h-5 min-w-5 rounded-full bg-accent text-accent-foreground border-0 font-bold text-xs px-1.5">
                 {count}
               </Badge>
             )}
