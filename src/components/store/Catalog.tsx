@@ -8,10 +8,10 @@ export const Catalog = () => (
         Nossos produtos
       </p>
       <h2 className="font-serif-display text-4xl md:text-5xl text-foreground">
-        Escolha sua dose de Monjaro
+        Escolha sua dose de Mounjaro
       </h2>
       <p className="text-lg text-muted-foreground mt-3 max-w-2xl mx-auto">
-        Todas as concentrações disponíveis. Original Eli Lilly, com nota fiscal e entrega refrigerada.
+        Todas as concentrações de Tirzepatida disponíveis. Original Eli Lilly, com nota fiscal e entrega refrigerada para todo o Brasil.
       </p>
     </div>
 

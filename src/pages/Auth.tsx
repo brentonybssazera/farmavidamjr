@@ -37,7 +37,11 @@ const Auth = () => {
       emailSchema.parse(loginEmail);
       passwordSchema.parse(loginPassword);
     } catch (err) {
-      if (err instanceof z.ZodError) return toast.error(err.errors[0].message);
+      if (err instanceof z.ZodError) {
+        toast.error(err.errors[0].message);
+        return;
+      }
+      return;
     }
     setLoading(true);
     const { error } = await supabase.auth.signInWithPassword({ email: loginEmail, password: loginPassword });
@@ -57,10 +61,14 @@ const Auth = () => {
       emailSchema.parse(signupEmail);
       passwordSchema.parse(signupPassword);
     } catch (err) {
-      if (err instanceof z.ZodError) return toast.error(err.errors[0].message);
+      if (err instanceof z.ZodError) {
+        toast.error(err.errors[0].message);
+        return;
+      }
+      return;
     }
     setLoading(true);
-    const { error } = await supabase.auth.signUp({
+    const { data, error } = await supabase.auth.signUp({
       email: signupEmail,
       password: signupPassword,
       options: {
@@ -68,13 +76,18 @@ const Auth = () => {
         data: { full_name: signupName },
       },
     });
-    setLoading(false);
     if (error) {
+      setLoading(false);
       toast.error("Não foi possível criar a conta", { description: error.message });
-    } else {
-      toast.success("Conta criada com sucesso!");
-      navigate("/");
+      return;
     }
+    // Garante login imediato (auto-confirm habilitado, sem confirmação por e-mail)
+    if (!data.session) {
+      await supabase.auth.signInWithPassword({ email: signupEmail, password: signupPassword });
+    }
+    setLoading(false);
+    toast.success("Conta criada com sucesso!");
+    navigate("/");
   };
 
   return (

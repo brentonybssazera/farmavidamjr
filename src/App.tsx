@@ -10,6 +10,7 @@ import ProductPage from "./pages/ProductPage";
 import Auth from "./pages/Auth";
 import Account from "./pages/Account";
 import Checkout from "./pages/Checkout";
+import DeliveryPolicy from "./pages/DeliveryPolicy";
 
 const queryClient = new QueryClient();
 
@@ -26,6 +27,7 @@ const App = () => (
             <Route path="/auth" element={<Auth />} />
             <Route path="/conta" element={<Account />} />
             <Route path="/checkout" element={<Checkout />} />
+            <Route path="/politica-de-entrega" element={<DeliveryPolicy />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
