@@ -32,7 +32,7 @@ export const Hero = () => (
         </h1>
 
         <p className="text-sm sm:text-base md:text-lg text-muted-foreground mt-3 sm:mt-4 max-w-xl mx-auto md:mx-0 px-1 sm:px-0">
-          Todas as doses por <strong className="text-foreground">R$ 210,99</strong> · entrega refrigerada em todo o Brasil, nota fiscal e suporte de farmacêutico.
+          Todas as doses por <strong className="text-foreground">R$ 215,59</strong> · entrega refrigerada em todo o Brasil, nota fiscal e suporte de farmacêutico.
         </p>
 
         <div className="flex flex-col sm:flex-row gap-2.5 sm:gap-3 mt-5 sm:mt-7 justify-center md:justify-start">
