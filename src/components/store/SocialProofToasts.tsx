@@ -34,8 +34,8 @@ export const SocialProofToasts = () => {
       );
       i++;
     };
-    const first = setTimeout(show, 4000);
-    const interval = setInterval(show, 14000);
+    const first = setTimeout(show, 8000);
+    const interval = setInterval(show, 35000);
     return () => { clearTimeout(first); clearInterval(interval); };
   }, []);
   return null;

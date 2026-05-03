@@ -34,12 +34,12 @@ export const UrgencyBar = () => {
   const fmt = `${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}`;
 
   return (
-    <div className="bg-gradient-to-r from-[hsl(0_84%_42%)] via-[hsl(0_84%_50%)] to-[hsl(0_84%_42%)] text-white animate-pulse">
-      <div className="container flex items-center justify-center gap-2 py-1.5 text-[11px] sm:text-sm font-bold">
-        <Flame className="h-4 w-4" />
-        <span>OFERTA RELÂMPAGO termina em</span>
-        <span className="font-mono bg-white text-[hsl(0_84%_42%)] px-2 py-0.5 rounded tabular-nums">{fmt}</span>
-        <a href="#produtos" className="hidden sm:inline underline underline-offset-2">Garantir agora</a>
+    <div className="bg-secondary border-b border-border text-foreground">
+      <div className="container flex items-center justify-center gap-2 py-1.5 text-[11px] sm:text-xs font-medium">
+        <Flame className="h-3.5 w-3.5 text-destructive" />
+        <span className="text-muted-foreground">Promoção do dia encerra em</span>
+        <span className="font-mono font-semibold text-foreground tabular-nums">{fmt}</span>
+        <a href="#produtos" className="hidden sm:inline text-primary hover:underline underline-offset-2 ml-1">Ver ofertas</a>
       </div>
     </div>
   );
