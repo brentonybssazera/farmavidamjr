@@ -159,6 +159,10 @@ const Checkout = () => {
           Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
         },
       });
+      // SigiloPay bloqueia polling muito frequente (403). Ignoramos silenciosamente.
+      if (res.status === 403) {
+        return;
+      }
       const data = await res.json().catch(() => ({}));
       const status = data?.status;
       if (status && status !== paymentStatus) {
@@ -175,7 +179,7 @@ const Checkout = () => {
 
   useEffect(() => {
     if (!pix || paymentStatus !== "PENDING") return;
-    const interval = setInterval(() => checkStatus(true), 5000);
+    const interval = setInterval(() => checkStatus(true), 15000);
     return () => clearInterval(interval);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pix, paymentStatus, pixIdentifier]);
