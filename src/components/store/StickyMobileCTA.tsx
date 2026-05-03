@@ -19,7 +19,7 @@ export const StickyMobileCTA = () => {
           <p className="text-[10px] text-muted-foreground line-through leading-none">R$ 5.266,77</p>
           <p className="text-sm font-bold text-foreground leading-tight truncate">Combo 3x Mounjaro · R$ 449,99</p>
         </div>
-        <Button asChild size="sm" className="rounded-full h-10 px-4 font-bold animate-pulse">
+        <Button asChild size="sm" className="rounded-full h-10 px-4 font-bold">
           <a href="#produtos"><Flame className="h-4 w-4 mr-1" /> Comprar</a>
         </Button>
       </div>

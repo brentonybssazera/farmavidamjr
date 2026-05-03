@@ -89,11 +89,11 @@ export const ProductCard = ({ product }: { product: Product }) => {
 
           <div className="mt-2 space-y-1">
             <div className="flex items-center justify-between text-[10px] sm:text-[11px]">
-              <span className="font-bold text-destructive">Restam {stock} un.</span>
-              <span className="text-muted-foreground flex items-center gap-1"><Eye className="h-3 w-3" /> {viewers} olhando</span>
+              <span className="font-medium text-foreground/80">Últimas {stock} unidades</span>
+              <span className="text-muted-foreground flex items-center gap-1"><Eye className="h-3 w-3" /> {viewers}</span>
             </div>
             <div className="h-1 rounded-full bg-muted overflow-hidden">
-              <div className="h-full bg-gradient-to-r from-destructive to-[hsl(0_84%_55%)] animate-pulse" style={{ width: `${100 - stock * 12}%` }} />
+              <div className="h-full bg-primary/70" style={{ width: `${100 - stock * 12}%` }} />
             </div>
           </div>
 
