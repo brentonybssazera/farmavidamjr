@@ -1,7 +1,7 @@
 import { ShieldCheck, Snowflake, Headphones, Truck } from "lucide-react";
 
 const items = [
-  { Icon: ShieldCheck, title: "100% Original", desc: "Eli Lilly com nota fiscal" },
+  { Icon: ShieldCheck, title: "100% Original", desc: "VitaPharma Laboratories com nota fiscal" },
   { Icon: Snowflake, title: "Cadeia de frio", desc: "Refrigerado 2-8°C" },
   { Icon: Truck, title: "Frete grátis", desc: "Para todo o Brasil" },
   { Icon: Headphones, title: "Farmacêutico", desc: "Suporte humano" },

@@ -24,7 +24,7 @@ export const Hero = () => (
           transition={{ delay: 0.2 }}
           className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-primary-soft text-primary text-[10px] sm:text-xs font-semibold uppercase tracking-wider"
         >
-          <Sparkles className="h-3.5 w-3.5" /> Original Eli Lilly · Estoque limitado
+          <Sparkles className="h-3.5 w-3.5" /> Original VitaPharma Laboratories · Estoque limitado
         </motion.span>
 
         <h1 className="font-serif-display text-[2rem] sm:text-5xl md:text-6xl text-foreground leading-[1.05] mt-3 sm:mt-4 text-balance">

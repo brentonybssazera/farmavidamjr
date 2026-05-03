@@ -10,12 +10,12 @@ export const Topbar = () => (
         </span>
         <span className="hidden md:flex items-center gap-1.5">
           <ShieldCheck className="h-3.5 w-3.5 animate-[pulse_2s_ease-in-out_infinite]" />
-          <span className="font-medium">100% original Eli Lilly</span>
+          <span className="font-medium">100% original VitaPharma Laboratories</span>
         </span>
       </div>
       <span className="sm:hidden flex items-center gap-1.5 font-semibold">
         <Truck className="h-3.5 w-3.5 animate-[truck-slide_2.4s_ease-in-out_infinite]" />
-        Frete grátis · Original Eli Lilly
+        Frete grátis · Original VitaPharma Laboratories
       </span>
       <a href="https://wa.me/5519984403849" target="_blank" rel="noreferrer" className="hidden sm:flex items-center gap-1.5 font-semibold hover:underline">
         <Phone className="h-3.5 w-3.5 animate-[pulse_2s_ease-in-out_infinite]" /> (19) 98440-3849

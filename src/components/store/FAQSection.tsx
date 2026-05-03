@@ -2,7 +2,7 @@ import { motion } from "framer-motion";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 
 const faqs = [
-  { q: "O Mounjaro é original?", a: "Sim, 100% original Eli Lilly, com nota fiscal e lote rastreável. Comercializado conforme legislação ANVISA." },
+  { q: "O Mounjaro é original?", a: "Sim, 100% original VitaPharma Laboratories, com nota fiscal e lote rastreável. Comercializado conforme legislação ANVISA." },
   { q: "Como é feita a entrega refrigerada?", a: "Enviamos em embalagem térmica com gelo gel, mantendo a temperatura entre 2°C e 8°C durante todo o trajeto. Entregamos para todo o Brasil em até 5 dias úteis." },
   { q: "Preciso enviar receita médica?", a: "Sim. Após a confirmação do pagamento, você envia a foto da receita pelo WhatsApp. Sem receita não despachamos." },
   { q: "Quais formas de pagamento vocês aceitam?", a: "PIX (com QR Code instantâneo), boleto e cartão em até 12x sem juros." },

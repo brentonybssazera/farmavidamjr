@@ -9,7 +9,7 @@ export const Catalog = () => (
         Escolha sua dose
       </h2>
       <p className="text-sm sm:text-base text-muted-foreground mt-2 sm:mt-3 px-2">
-        Todas as concentrações de Tirzepatida — original Eli Lilly, frete grátis e entrega refrigerada.
+        Todas as concentrações de Tirzepatida — original VitaPharma Laboratories, frete grátis e entrega refrigerada.
       </p>
     </div>
 
