@@ -1,13 +1,26 @@
 import { Link } from "react-router-dom";
-import { Plus, Check, Flame } from "lucide-react";
+import { Plus, Check, Flame, Eye } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Product, formatBRL } from "@/lib/products";
 import { useCart } from "@/stores/cartStore";
 import { toast } from "sonner";
 import { openCart } from "@/lib/cartUi";
 
+const fakeStock = (id: string) => {
+  let h = 0;
+  for (let i = 0; i < id.length; i++) h = (h * 31 + id.charCodeAt(i)) >>> 0;
+  return (h % 6) + 2; // 2..7
+};
+const fakeViewers = (id: string) => {
+  let h = 7;
+  for (let i = 0; i < id.length; i++) h = (h * 17 + id.charCodeAt(i)) >>> 0;
+  return (h % 18) + 6; // 6..23
+};
+
 export const ProductCard = ({ product }: { product: Product }) => {
   const add = useCart((s) => s.add);
+  const stock = fakeStock(product.id);
+  const viewers = fakeViewers(product.id);
 
   const handleAdd = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -73,6 +86,16 @@ export const ProductCard = ({ product }: { product: Product }) => {
           )}
           <p className="font-serif-display text-[22px] sm:text-3xl text-foreground leading-none">{formatBRL(product.price)}</p>
           <p className="text-[10px] sm:text-xs text-success font-semibold mt-1">12x de {formatBRL(product.price / 12)} sem juros</p>
+
+          <div className="mt-2 space-y-1">
+            <div className="flex items-center justify-between text-[10px] sm:text-[11px]">
+              <span className="font-bold text-destructive">Restam {stock} un.</span>
+              <span className="text-muted-foreground flex items-center gap-1"><Eye className="h-3 w-3" /> {viewers} olhando</span>
+            </div>
+            <div className="h-1 rounded-full bg-muted overflow-hidden">
+              <div className="h-full bg-gradient-to-r from-destructive to-[hsl(0_84%_55%)] animate-pulse" style={{ width: `${100 - stock * 12}%` }} />
+            </div>
+          </div>
 
           <Button
             onClick={handleAdd}
