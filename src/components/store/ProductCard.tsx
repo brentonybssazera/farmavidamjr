@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Product, formatBRL } from "@/lib/products";
 import { useCart } from "@/stores/cartStore";
 import { toast } from "sonner";
+import { openCart } from "@/lib/cartUi";
 
 export const ProductCard = ({ product }: { product: Product }) => {
   const add = useCart((s) => s.add);
@@ -14,7 +15,8 @@ export const ProductCard = ({ product }: { product: Product }) => {
     toast.success("Adicionado ao carrinho!", {
       description: product.name,
       position: "top-center",
-      duration: 2200,
+      duration: 3500,
+      action: { label: "Ver carrinho", onClick: () => openCart() },
     });
   };
 
