@@ -30,7 +30,7 @@ export const SocialProofToasts = () => {
             <p className="text-muted-foreground">comprou {e.product} · há {mins} min</p>
           </div>
         </div>,
-        { position: "bottom-left", duration: 5000 }
+        { position: typeof window !== "undefined" && window.innerWidth < 768 ? "top-center" : "bottom-left", duration: 5000 }
       );
       i++;
     };
