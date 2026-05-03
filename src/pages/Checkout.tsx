@@ -152,9 +152,15 @@ const Checkout = () => {
       const params = new URLSearchParams();
       if (pix?.id) params.set("id", String(pix.id));
       if (pixIdentifier) params.set("identifier", pixIdentifier);
-      const { data, error } = await supabase.functions.invoke(`check-pix-status?${params.toString()}`, { method: "GET" });
-      if (error) throw error;
-      const status = (data as any)?.status;
+      const url = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/check-pix-status?${params.toString()}`;
+      const res = await fetch(url, {
+        headers: {
+          apikey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
+          Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+        },
+      });
+      const data = await res.json().catch(() => ({}));
+      const status = data?.status;
       if (status && status !== paymentStatus) {
         setPaymentStatus(status);
         if (status === "COMPLETED") toast.success("Pagamento confirmado! 🎉");
