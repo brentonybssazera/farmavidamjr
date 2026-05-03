@@ -32,8 +32,12 @@ export const Hero = () => (
         </h1>
 
         <p className="text-sm sm:text-base md:text-lg text-muted-foreground mt-3 sm:mt-4 max-w-xl mx-auto md:mx-0 px-1 sm:px-0">
-          Todas as doses por <strong className="text-foreground">R$ 215,59</strong> · entrega refrigerada em todo o Brasil, nota fiscal e suporte de farmacêutico.
+          <strong className="text-destructive">Últimas unidades</strong> com até <strong className="text-foreground">90% OFF</strong> — todas as doses por <strong className="text-foreground">R$ 215,59</strong>. Frete grátis e entrega refrigerada hoje.
         </p>
+
+        <div className="mt-3 inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-destructive/10 border border-destructive/30 text-destructive text-[11px] sm:text-xs font-bold animate-pulse">
+          ⏰ Promoção válida só até a meia-noite
+        </div>
 
         <div className="flex flex-col sm:flex-row gap-2.5 sm:gap-3 mt-5 sm:mt-7 justify-center md:justify-start">
           <Button asChild size="lg" className="rounded-full h-13 sm:h-14 px-6 sm:px-7 text-sm sm:text-base font-semibold bg-primary hover:bg-primary/90 shadow-brand">

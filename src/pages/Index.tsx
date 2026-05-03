@@ -1,5 +1,9 @@
 import { useState } from "react";
 import { Topbar } from "@/components/store/Topbar";
+import { UrgencyBar } from "@/components/store/UrgencyBar";
+import { WelcomePopup } from "@/components/store/WelcomePopup";
+import { SocialProofToasts } from "@/components/store/SocialProofToasts";
+import { StickyMobileCTA } from "@/components/store/StickyMobileCTA";
 import { Header } from "@/components/store/Header";
 import { Hero } from "@/components/store/Hero";
 import { Catalog } from "@/components/store/Catalog";
@@ -18,8 +22,11 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-background flex flex-col">
       <Topbar />
+      <UrgencyBar />
       <Header onCartClick={() => setCartOpen(true)} />
       <CartSheet open={cartOpen} onOpenChange={setCartOpen} />
+      <WelcomePopup />
+      <SocialProofToasts />
 
       <main className="flex-1">
         <Hero />
@@ -33,6 +40,7 @@ const Index = () => {
       </main>
 
       <Footer />
+      <StickyMobileCTA />
     </div>
   );
 };
