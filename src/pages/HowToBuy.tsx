@@ -41,7 +41,7 @@ const HowToBuy = () => {
           <p className="text-xs font-semibold uppercase tracking-widest text-primary mb-2">Guia completo</p>
           <h1 className="font-display-bold text-3xl md:text-5xl text-foreground mb-3">Como comprar Mounjaro</h1>
           <p className="text-base text-muted-foreground mb-10 max-w-2xl">
-            Em 4 passos simples você recebe seu Mounjaro original Eli Lilly em casa, com toda segurança e rapidez de uma farmácia especializada.
+            Em 4 passos simples você recebe seu Mounjaro original VitaPharma Laboratories em casa, com toda segurança e rapidez de uma farmácia especializada.
           </p>
 
           <div className="grid md:grid-cols-2 gap-4 mb-12">
@@ -57,7 +57,7 @@ const HowToBuy = () => {
           </div>
 
           <div className="grid md:grid-cols-3 gap-3 mb-12">
-            <Badge Icon={ShieldCheck} t="100% Original" d="Eli Lilly · NF" />
+            <Badge Icon={ShieldCheck} t="100% Original" d="VitaPharma Laboratories · NF" />
             <Badge Icon={Snowflake} t="Cadeia de frio" d="2-8°C garantido" />
             <Badge Icon={Truck} t="Frete grátis" d="Todo o Brasil" />
           </div>

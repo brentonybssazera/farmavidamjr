@@ -123,7 +123,7 @@ const Auth = () => {
 
             <div className="mt-7 space-y-3">
               {[
-                { Icon: ShieldCheck, t: "100% Original Eli Lilly", d: "Nota fiscal e lote rastreável" },
+                { Icon: ShieldCheck, t: "100% Original VitaPharma Laboratories", d: "Nota fiscal e lote rastreável" },
                 { Icon: Snowflake, t: "Entrega refrigerada", d: "Cadeia de frio 2-8°C" },
                 { Icon: Truck, t: "Frete grátis", d: "Para todo o Brasil" },
               ].map(({ Icon, t, d }, i) => (
