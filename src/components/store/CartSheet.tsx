@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
@@ -10,6 +11,12 @@ interface Props { open: boolean; onOpenChange: (v: boolean) => void }
 export const CartSheet = ({ open, onOpenChange }: Props) => {
   const { items, setQty, remove, total } = useCart();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const handler = () => onOpenChange(true);
+    window.addEventListener("open-cart", handler);
+    return () => window.removeEventListener("open-cart", handler);
+  }, [onOpenChange]);
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
