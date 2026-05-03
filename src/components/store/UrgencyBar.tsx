@@ -35,9 +35,12 @@ export const UrgencyBar = () => {
 
   return (
     <div className="bg-secondary border-b border-border text-foreground">
-      <div className="container flex items-center justify-center gap-2 py-1.5 text-[11px] sm:text-xs font-medium">
-        <Flame className="h-3.5 w-3.5 text-destructive" />
-        <span className="text-muted-foreground">Promoção do dia encerra em</span>
+      <div className="container flex flex-wrap items-center justify-center gap-x-1.5 gap-y-0.5 py-1.5 px-3 text-[10px] sm:text-xs font-medium text-center">
+        <Flame className="h-3 w-3 sm:h-3.5 sm:w-3.5 text-destructive flex-shrink-0" />
+        <span className="text-muted-foreground">
+          <span className="hidden xs:inline sm:inline">Promoção do dia encerra em</span>
+          <span className="xs:hidden sm:hidden">Promoção encerra em</span>
+        </span>
         <span className="font-mono font-semibold text-foreground tabular-nums">{fmt}</span>
         <a href="#produtos" className="hidden sm:inline text-primary hover:underline underline-offset-2 ml-1">Ver ofertas</a>
       </div>
