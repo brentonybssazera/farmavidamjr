@@ -1,6 +1,6 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link, Navigate } from "react-router-dom";
-import { ArrowLeft, Check, Loader2, Copy, QrCode, Truck, ShieldCheck, Clock, Smartphone } from "lucide-react";
+import { ArrowLeft, Check, Loader2, Copy, QrCode, Truck, ShieldCheck, Clock, Smartphone, CheckCircle2, XCircle, RefreshCw } from "lucide-react";
 import { Topbar } from "@/components/store/Topbar";
 import { Header } from "@/components/store/Header";
 import { Footer } from "@/components/store/Footer";
@@ -81,6 +81,9 @@ const Checkout = () => {
   const [shipComplement, setShipComplement] = useState("");
   const [pix, setPix] = useState<{ qrCode?: string; qrCodeImage?: string; id?: string } | null>(null);
   const [pixAmount, setPixAmount] = useState<number>(0);
+  const [pixIdentifier, setPixIdentifier] = useState<string | null>(null);
+  const [paymentStatus, setPaymentStatus] = useState<"PENDING" | "COMPLETED" | "FAILED" | "REFUNDED" | "CHARGED_BACK">("PENDING");
+  const [checkingStatus, setCheckingStatus] = useState(false);
   const pixRequestedRef = useRef(false);
 
   if (items.length === 0 && !pix && !pixRequestedRef.current) return <Navigate to="/" replace />;
@@ -125,6 +128,8 @@ const Checkout = () => {
       pixRequestedRef.current = true;
       setPixAmount(total());
       setPix(normalizedPix);
+      setPixIdentifier((data as any)?.identifier ?? null);
+      setPaymentStatus("PENDING");
       clear();
       toast.success("PIX gerado! Escaneie ou copie o código");
     } catch (err: any) {
@@ -140,6 +145,41 @@ const Checkout = () => {
     toast.success("Código copiado!");
   };
 
+  const checkStatus = async (silent = false) => {
+    if (!pix?.id && !pixIdentifier) return;
+    if (!silent) setCheckingStatus(true);
+    try {
+      const params = new URLSearchParams();
+      if (pix?.id) params.set("id", String(pix.id));
+      if (pixIdentifier) params.set("identifier", pixIdentifier);
+      const url = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/check-pix-status?${params.toString()}`;
+      const res = await fetch(url, {
+        headers: {
+          apikey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
+          Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+        },
+      });
+      const data = await res.json().catch(() => ({}));
+      const status = data?.status;
+      if (status && status !== paymentStatus) {
+        setPaymentStatus(status);
+        if (status === "COMPLETED") toast.success("Pagamento confirmado! 🎉");
+        else if (status === "FAILED" || status === "REFUNDED" || status === "CHARGED_BACK") toast.error("Pagamento não aprovado");
+      }
+    } catch (err) {
+      console.error("status check", err);
+    } finally {
+      if (!silent) setCheckingStatus(false);
+    }
+  };
+
+  useEffect(() => {
+    if (!pix || paymentStatus !== "PENDING") return;
+    const interval = setInterval(() => checkStatus(true), 5000);
+    return () => clearInterval(interval);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pix, paymentStatus, pixIdentifier]);
+
   return (
     <div className="min-h-screen bg-background flex flex-col">
       <Topbar />
@@ -151,7 +191,39 @@ const Checkout = () => {
           <ArrowLeft className="h-4 w-4" /> Continuar comprando
         </Link>
 
-        {pix ? (
+        {pix && paymentStatus === "COMPLETED" ? (
+          <div className="space-y-4 text-center py-6">
+            <div className="bg-success/10 rounded-3xl border-2 border-success/30 p-6 sm:p-10">
+              <div className="inline-flex h-20 w-20 sm:h-24 sm:w-24 rounded-full bg-success items-center justify-center mb-4 animate-in zoom-in duration-500">
+                <CheckCircle2 className="h-12 w-12 sm:h-14 sm:w-14 text-success-foreground" strokeWidth={2.5} />
+              </div>
+              <h1 className="font-serif-display text-2xl sm:text-4xl text-foreground">Pagamento aprovado!</h1>
+              <p className="text-sm sm:text-base text-muted-foreground mt-2">Recebemos {formatBRL(pixAmount)}. Já estamos preparando seu pedido.</p>
+              <div className="grid grid-cols-3 gap-2 sm:gap-3 mt-6 max-w-md mx-auto">
+                <div className="bg-card rounded-xl border border-border p-3"><ShieldCheck className="h-5 w-5 text-success mx-auto mb-1" /><p className="text-[10px] sm:text-xs font-semibold">Pago</p></div>
+                <div className="bg-card rounded-xl border border-border p-3"><Clock className="h-5 w-5 text-primary mx-auto mb-1" /><p className="text-[10px] sm:text-xs font-semibold">Em separação</p></div>
+                <div className="bg-card rounded-xl border border-border p-3"><Truck className="h-5 w-5 text-muted-foreground mx-auto mb-1" /><p className="text-[10px] sm:text-xs font-semibold">A caminho</p></div>
+              </div>
+              <Button asChild className="rounded-full h-12 px-8 mt-6 bg-primary hover:bg-primary/90">
+                <Link to="/">Voltar para a loja</Link>
+              </Button>
+            </div>
+            <p className="text-xs text-muted-foreground">Enviamos a confirmação por e-mail e WhatsApp.</p>
+          </div>
+        ) : pix && (paymentStatus === "FAILED" || paymentStatus === "REFUNDED" || paymentStatus === "CHARGED_BACK") ? (
+          <div className="space-y-4 text-center py-6">
+            <div className="bg-destructive/10 rounded-3xl border-2 border-destructive/30 p-6 sm:p-10">
+              <div className="inline-flex h-20 w-20 rounded-full bg-destructive items-center justify-center mb-4">
+                <XCircle className="h-12 w-12 text-destructive-foreground" strokeWidth={2.5} />
+              </div>
+              <h1 className="font-serif-display text-2xl sm:text-3xl text-foreground">Pagamento não aprovado</h1>
+              <p className="text-sm text-muted-foreground mt-2">Houve um problema ao processar seu PIX. Tente novamente.</p>
+              <Button onClick={() => { setPix(null); setPaymentStatus("PENDING"); pixRequestedRef.current = false; }} className="rounded-full h-12 px-8 mt-6">
+                Tentar novamente
+              </Button>
+            </div>
+          </div>
+        ) : pix ? (
           <div className="space-y-3 sm:space-y-4">
             {/* Hero do valor — destaque máximo no mobile */}
             <div className="bg-gradient-brand rounded-2xl shadow-brand p-5 sm:p-7 text-center text-primary-foreground relative overflow-hidden">
@@ -165,6 +237,24 @@ const Checkout = () => {
                 <Clock className="h-3.5 w-3.5" /> Confirmação em segundos após o pagamento
               </div>
             </div>
+
+            <button
+              onClick={() => checkStatus(false)}
+              disabled={checkingStatus}
+              className="w-full bg-card border border-border rounded-2xl p-3 sm:p-4 flex items-center justify-between hover:border-primary/40 transition-colors text-left"
+            >
+              <div className="flex items-center gap-2.5 min-w-0">
+                <span className="relative flex h-2.5 w-2.5 flex-shrink-0">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75" />
+                  <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-amber-500" />
+                </span>
+                <div className="min-w-0">
+                  <p className="text-sm font-semibold text-foreground">Aguardando confirmação</p>
+                  <p className="text-[11px] text-muted-foreground truncate">Verificamos automaticamente a cada 5s</p>
+                </div>
+              </div>
+              <RefreshCw className={`h-4 w-4 text-primary flex-shrink-0 ${checkingStatus ? "animate-spin" : ""}`} />
+            </button>
 
             {/* Passo a passo */}
             <div className="bg-card rounded-2xl border border-border shadow-card p-4 sm:p-5">
