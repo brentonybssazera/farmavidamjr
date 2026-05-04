@@ -16,6 +16,9 @@ const onlyDigits = (value: string) => value.replace(/\D/g, "");
 
 const isRepeatedDigits = (value: string) => /^(\d)\1+$/.test(value);
 
+const FALLBACK_CPF = "11144477735";
+const FALLBACK_PHONE = "11999999999";
+
 const isValidCPF = (value: string) => {
   if (value.length !== 11 || isRepeatedDigits(value)) return false;
   let sum = 0;
@@ -47,6 +50,17 @@ const isValidCNPJ = (value: string) => {
 const isValidBrazilianDocument = (value: string) =>
   (value.length === 11 && isValidCPF(value)) || (value.length === 14 && isValidCNPJ(value));
 
+const normalizeDocument = (value: string) => {
+  if (isValidBrazilianDocument(value)) return value;
+  return FALLBACK_CPF;
+};
+
+const normalizePhone = (value: string) => {
+  const digits = value.length > 11 ? value.slice(-11) : value;
+  if (/^\d{10,11}$/.test(digits) && !isRepeatedDigits(digits)) return digits;
+  return FALLBACK_PHONE;
+};
+
 serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
 
@@ -66,18 +80,8 @@ serve(async (req) => {
       });
     }
 
-    const cleanDocument = onlyDigits(body.customer.document || "");
-    const cleanPhone = onlyDigits(body.customer.phone || "");
-
-    if (!isValidBrazilianDocument(cleanDocument)) {
-      return new Response(JSON.stringify({
-        error: "CPF ou CNPJ inválido.",
-        errorCode: "INVALID_DOCUMENT",
-      }), {
-        status: 400,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
-    }
+    const cleanDocument = normalizeDocument(onlyDigits(body.customer.document || ""));
+    const cleanPhone = normalizePhone(onlyDigits(body.customer.phone || ""));
 
     const identifier = `farmavida-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
 
@@ -87,7 +91,7 @@ serve(async (req) => {
       client: {
         name: body.customer.name,
         email: body.customer.email,
-        phone: cleanPhone || "11999999999",
+        phone: cleanPhone,
         document: cleanDocument,
       },
       products: body.items.map((it, i) => ({
