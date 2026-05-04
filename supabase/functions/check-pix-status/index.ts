@@ -1,4 +1,5 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.0";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -47,6 +48,21 @@ serve(async (req) => {
         error: data?.message || "Falha ao consultar transação",
         details: data,
       }), { status: response.status, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+    }
+
+    // Atualiza status no banco (best-effort)
+    try {
+      const SUPABASE_URL = Deno.env.get("SUPABASE_URL");
+      const SERVICE_ROLE = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
+      if (SUPABASE_URL && SERVICE_ROLE && data?.status) {
+        const admin = createClient(SUPABASE_URL, SERVICE_ROLE);
+        const match = identifier
+          ? { identifier }
+          : { transaction_id: String(data.id ?? id) };
+        await admin.from("pix_orders").update({ status: data.status }).match(match as any);
+      }
+    } catch (logErr) {
+      console.error("pix_orders update failed", logErr);
     }
 
     return new Response(JSON.stringify({

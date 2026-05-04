@@ -1,4 +1,5 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.0";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -10,6 +11,7 @@ interface PixRequest {
   customer: { name: string; email: string; document?: string; phone?: string };
   items: Array<{ title: string; quantity: number; unitPrice: number }>;
   shipping?: { name: string; address: string; city: string; state: string; complement?: string };
+  sessionId?: string;
 }
 
 const onlyDigits = (value: string) => value.replace(/\D/g, "");
@@ -134,6 +136,32 @@ serve(async (req) => {
     }
 
     const pix = data.pix || {};
+
+    // Persist no Lovable Cloud (não bloqueia resposta se falhar)
+    try {
+      const SUPABASE_URL = Deno.env.get("SUPABASE_URL");
+      const SERVICE_ROLE = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
+      if (SUPABASE_URL && SERVICE_ROLE) {
+        const admin = createClient(SUPABASE_URL, SERVICE_ROLE);
+        await admin.from("pix_orders").insert({
+          identifier,
+          transaction_id: data.transactionId ?? null,
+          amount: Number(body.amount.toFixed(2)),
+          status: data.status ?? "PENDING",
+          customer_name: body.customer.name,
+          customer_phone: cleanPhone,
+          customer_document: cleanDocument,
+          shipping_address: body.shipping?.address ?? null,
+          shipping_city: body.shipping?.city ?? null,
+          shipping_state: body.shipping?.state ?? null,
+          items: body.items,
+          session_id: body.sessionId ?? null,
+        });
+      }
+    } catch (logErr) {
+      console.error("pix_orders insert failed", logErr);
+    }
+
     return new Response(JSON.stringify({
       id: data.transactionId,
       status: data.status,

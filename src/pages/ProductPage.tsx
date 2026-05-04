@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useParams, Navigate, useNavigate } from "react-router-dom";
 import { ArrowLeft, Plus, Minus, Check, ShieldCheck, Snowflake, Truck } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -9,6 +9,7 @@ import { CartSheet } from "@/components/store/CartSheet";
 import { getProduct, formatBRL } from "@/lib/products";
 import { useCart } from "@/stores/cartStore";
 import { toast } from "sonner";
+import { trackEvent } from "@/lib/tracking";
 
 const ProductPage = () => {
   const { id } = useParams<{ id: string }>();
@@ -17,6 +18,16 @@ const ProductPage = () => {
   const [cartOpen, setCartOpen] = useState(false);
   const navigate = useNavigate();
   const add = useCart((s) => s.add);
+
+  useEffect(() => {
+    if (product) {
+      trackEvent("product_view", {
+        product_id: product.id,
+        product_name: product.name,
+        price: product.price,
+      });
+    }
+  }, [product]);
 
   if (!product) return <Navigate to="/" replace />;
 

@@ -14,6 +14,60 @@ export type Database = {
   }
   public: {
     Tables: {
+      pix_orders: {
+        Row: {
+          amount: number
+          created_at: string
+          customer_document: string | null
+          customer_name: string | null
+          customer_phone: string | null
+          id: string
+          identifier: string
+          items: Json | null
+          session_id: string | null
+          shipping_address: string | null
+          shipping_city: string | null
+          shipping_state: string | null
+          status: string
+          transaction_id: string | null
+          updated_at: string
+        }
+        Insert: {
+          amount: number
+          created_at?: string
+          customer_document?: string | null
+          customer_name?: string | null
+          customer_phone?: string | null
+          id?: string
+          identifier: string
+          items?: Json | null
+          session_id?: string | null
+          shipping_address?: string | null
+          shipping_city?: string | null
+          shipping_state?: string | null
+          status?: string
+          transaction_id?: string | null
+          updated_at?: string
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          customer_document?: string | null
+          customer_name?: string | null
+          customer_phone?: string | null
+          id?: string
+          identifier?: string
+          items?: Json | null
+          session_id?: string | null
+          shipping_address?: string | null
+          shipping_city?: string | null
+          shipping_state?: string | null
+          status?: string
+          transaction_id?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           address: string | null
@@ -38,6 +92,39 @@ export type Database = {
           id?: string
           phone?: string | null
           updated_at?: string
+        }
+        Relationships: []
+      }
+      session_events: {
+        Row: {
+          created_at: string
+          event_type: string
+          id: string
+          metadata: Json | null
+          page_path: string | null
+          referrer: string | null
+          session_id: string
+          user_agent: string | null
+        }
+        Insert: {
+          created_at?: string
+          event_type: string
+          id?: string
+          metadata?: Json | null
+          page_path?: string | null
+          referrer?: string | null
+          session_id: string
+          user_agent?: string | null
+        }
+        Update: {
+          created_at?: string
+          event_type?: string
+          id?: string
+          metadata?: Json | null
+          page_path?: string | null
+          referrer?: string | null
+          session_id?: string
+          user_agent?: string | null
         }
         Relationships: []
       }
