@@ -63,41 +63,26 @@ export const Hero = () => (
         transition={{ duration: 0.7, delay: 0.1 }}
         className="relative max-w-sm mx-auto md:max-w-none w-full"
       >
-        <motion.div
-          animate={{ y: [0, -12, 0] }}
-          transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-          className="relative rounded-3xl overflow-hidden shadow-card-hover bg-gradient-brand"
-        >
-          <img src={heroImg} alt="Mounjaro Tirzepatida" width={1280} height={1280}
-            loading="eager" fetchPriority="high"
-            className="w-full h-auto object-cover mix-blend-luminosity opacity-95" />
-        </motion.div>
+        <div className="relative rounded-3xl overflow-hidden bg-secondary/40 border border-border shadow-card">
+          <img
+            src={heroImg}
+            alt="Mounjaro Tirzepatida — caixa e caneta aplicadora"
+            width={1280}
+            height={1280}
+            loading="eager"
+            fetchPriority="high"
+            className="w-full h-auto object-cover"
+          />
+        </div>
 
-        <motion.div
-          initial={{ opacity: 0, x: -30 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ delay: 0.5 }}
-          className="absolute -bottom-4 -left-2 sm:-left-6 bg-card rounded-2xl shadow-card-hover border border-border p-3 sm:p-4 flex items-center gap-3"
-        >
-          <div className="flex -space-x-1">
+        <div className="mt-3 flex items-center justify-center gap-2 text-[11px] sm:text-xs text-muted-foreground">
+          <div className="flex gap-0.5">
             {[0, 1, 2, 3, 4].map((i) => (
-              <Star key={i} className="h-4 w-4 fill-accent text-accent" />
+              <Star key={i} className="h-3.5 w-3.5 fill-accent text-accent" />
             ))}
           </div>
-          <div className="text-left">
-            <p className="text-sm font-bold text-foreground leading-none">+12.000 clientes</p>
-            <p className="text-[11px] text-muted-foreground mt-0.5">avaliam como excelente</p>
-          </div>
-        </motion.div>
-
-        <motion.div
-          initial={{ opacity: 0, x: 30 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ delay: 0.7 }}
-          className="absolute -top-3 -right-2 sm:-right-4 bg-success text-success-foreground rounded-full px-4 py-2 shadow-brand text-xs font-bold uppercase tracking-wider"
-        >
-          Frete Grátis
-        </motion.div>
+          <span><strong className="text-foreground">4,9/5</strong> · +12.000 clientes atendidos</span>
+        </div>
       </motion.div>
     </div>
   </section>
