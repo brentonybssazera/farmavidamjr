@@ -12,6 +12,7 @@ import { useCart } from "@/stores/cartStore";
 import { formatBRL } from "@/lib/products";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { trackEvent, getSessionId } from "@/lib/tracking";
 
 const onlyDigits = (value: string) => value.replace(/\D/g, "");
 
@@ -47,6 +48,11 @@ const Checkout = () => {
   const [checkingStatus, setCheckingStatus] = useState(false);
   const pixRequestedRef = useRef(false);
 
+  useEffect(() => {
+    trackEvent("checkout_start", { items: items.length, total: total() });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   if (items.length === 0 && !pix && !pixRequestedRef.current) return <Navigate to="/" replace />;
 
   const handlePlace = async () => {
@@ -66,6 +72,7 @@ const Checkout = () => {
             state: shipState.trim(),
             complement: shipComplement.trim(),
           },
+          sessionId: getSessionId(),
         },
       });
       if (error) throw error;
@@ -78,6 +85,10 @@ const Checkout = () => {
       setPix(normalizedPix);
       setPixIdentifier((data as any)?.identifier ?? null);
       setPaymentStatus("PENDING");
+      trackEvent("pix_generated", {
+        amount: total(),
+        identifier: (data as any)?.identifier,
+      });
       clear();
       toast.success("PIX gerado! Escaneie ou copie o código");
     } catch (err: any) {
@@ -115,8 +126,12 @@ const Checkout = () => {
       const status = data?.status;
       if (status && status !== paymentStatus) {
         setPaymentStatus(status);
-        if (status === "COMPLETED") toast.success("Pagamento confirmado! 🎉");
-        else if (status === "FAILED" || status === "REFUNDED" || status === "CHARGED_BACK") toast.error("Pagamento não aprovado");
+        if (status === "COMPLETED") {
+          toast.success("Pagamento confirmado! 🎉");
+          trackEvent("pix_paid", { amount: pixAmount, identifier: pixIdentifier });
+        } else if (status === "FAILED" || status === "REFUNDED" || status === "CHARGED_BACK") {
+          toast.error("Pagamento não aprovado");
+        }
       }
     } catch (err) {
       console.error("status check", err);
