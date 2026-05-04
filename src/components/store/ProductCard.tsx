@@ -38,12 +38,12 @@ export const ProductCard = ({ product }: { product: Product }) => {
   return (
     <article className="group relative bg-card rounded-2xl border border-border overflow-hidden shadow-card hover:shadow-card-hover hover:border-primary/30 transition-all duration-300 flex flex-col">
       {product.badge && (
-        <span className="absolute top-2.5 left-2.5 z-10 inline-flex items-center gap-1 px-2 py-1 rounded-full bg-accent/95 backdrop-blur text-accent-foreground text-[9px] sm:text-[10px] font-bold uppercase tracking-wider">
-          <Flame className="h-3 w-3" /> {product.badge}
+        <span className="absolute top-2 left-2 z-10 inline-flex items-center gap-0.5 sm:gap-1 px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-full bg-accent/95 backdrop-blur text-accent-foreground text-[8px] sm:text-[10px] font-bold uppercase tracking-wider max-w-[60%] truncate">
+          <Flame className="h-2.5 w-2.5 sm:h-3 sm:w-3 flex-shrink-0" /> <span className="truncate">{product.badge}</span>
         </span>
       )}
       {discount > 0 && (
-        <span className="absolute top-2.5 right-2.5 z-10 px-2 py-1 rounded-full bg-success/95 backdrop-blur text-success-foreground text-[11px] sm:text-xs font-bold">
+        <span className="absolute top-2 right-2 z-10 px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-full bg-success/95 backdrop-blur text-success-foreground text-[10px] sm:text-xs font-bold">
           -{discount}%
         </span>
       )}
