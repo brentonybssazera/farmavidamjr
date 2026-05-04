@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 import { Product } from "@/lib/products";
+import { trackEvent } from "@/lib/tracking";
 
 export type CartLine = { product: Product; quantity: number };
 
@@ -20,6 +21,12 @@ export const useCart = create<CartState>()(
       items: [],
       add: (product, qty = 1) =>
         set((s) => {
+          trackEvent("add_to_cart", {
+            product_id: product.id,
+            product_name: product.name,
+            quantity: qty,
+            price: product.price,
+          });
           const existing = s.items.find((i) => i.product.id === product.id);
           if (existing) {
             return {
